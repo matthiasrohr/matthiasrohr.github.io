@@ -1,0 +1,44 @@
+= Additional Object Security with UUIDs
+:page-date: 2015-10-30
+:page-categories: Secure Software Development
+:description: One of the most critical vulnerabilities a Web application can have is an insecure direct object reference. Such vulnerability normaly exists due to an (usually database) object id that an user can…
+
+One of the most critical vulnerabilities a Web application can have is an https://www.owasp.org/index.php/Top_10_2010-A4-Insecure_Direct_Object_References[insecure direct object reference]. Such vulnerability normaly exists due to an (usually database) object id that an user can directly access and manipulate (and!) that is not authorized correctly.
+
+An example that we often see is something like this:
+
+http(s)://www.example.com?id=123
+
+or within a path parameter:
+
+http(s)://www.example.com/123/
+
+If such an direct object id is not correctly authorized by the application, an attacker can *very easily* identify it by incrementing / decrementing the id that is provided to him. Tools such as Burp Proxy offer a functionality to do this basically automatically. The result would be, that confidential data can be accessed and stolen.
+
+Besides performing programmatic authorization checks (within the code), there are a couple of very effective countermeasures to prevent this type of vulnerability by design:
+
+* Perform identify propagation and check permissions on backend system
+* Implement an https://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/AccessReferenceMap.html[indirection layer] that maps (database) object ids to user specific ids.
+
+Well, bot are very good primary measures, that are, unfortunately, not very easy to implement. Which is why so many applications gets compromised by such a vulnerability.
+
+One very nice additional measure to not fix such vulnerability but makes its identification much harder for an attacker is to not use incremented object ids but to use a scheme that is harder to guess by an atacker. One way to do this is using https://www.ietf.org/rfc/rfc4122.txt[Universally Unique Identified (UUIDs)], that is based on hashing. Instead of an "123" the object would be addressed by something like "a07e9037-e80f-49e6-802c-fc20cc6afbe8".
+
+The implementation of UUIDs requires persistance technology (ORM) to support it though. Hibernate offers a special generator that must be activated with the following annotation:
+
+....
+import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+...
+@GeneratedValue(generator = "uuid2")
+@GenericGenerator(name = "uuid2", strategy = "uuid2")
+@Column(name = "id", columnDefinition = "BINARY(16)")
+@Id
+private UUID id;
+....
+
+Thats basically all you need. The only thing that must be changed in addition is the data type of the id column in the database (instead of int just use a binary data type with a length of 16 bytes). After this, newly created obects are automatically enumerated with UUIDs and instead of the urls shown above, users would acces objects in the following way:
+
+http(s)://www.example.com/a07e9037-e80f-49e6-802c-fc20cc6afbe8/
+
+If this object identfier leaks proper authorization an attacker can of course stil access it. Identification is now much harder though since an attacker cannot find them by incrementing ids anymore.

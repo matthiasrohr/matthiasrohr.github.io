@@ -1,0 +1,32 @@
+= Gartner's Magic Quadrant for Application Security Testing 2014
+:page-date: 2014-09-08
+:page-categories: Security Test Automation
+:page-tags: DAST, IAST, RASP, SAST
+:description: One publication that usually became a lot of attention in the application security market is of course Gartner’s magic quadrant. A new one for Application Security Testing (that is confusingly…
+
+image::2014/09/magic-quadrant-gartner-application-security-testing-AST-vendors-leaders-294x300.jpg[magic-quadrant-gartner-application-security-testing-AST-vendors-leaders]
+
+One publication that usually became a lot of attention in the application security market is of course Gartner’s magic quadrant. A new one for Application Security Testing (that is confusingly abbreviated with "AST", a term that in software anylysis usually stands for http://en.wikipedia.org/wiki/Abstract_syntax_tree[Abstract Syntax Tree]).
+
+A couple of years ago, Gartner created two new quadrants in respect of application security, one for static tools (SAST) and the other one for dynamic ones (DAST). As long as integration of both technologies does practically not exist a well thought idea. Due to what reasons ever, Gartner merged those two into one quadrant, the https://www.gartner.com/doc/2786417/magic-quadrant-application-security-testing[Magic Quadrant for Application Security Testing].
+
+Since we still don’t have this kind of combined technologies in practice (SAST and DAST tools are still practically separate technologies), this approach is unfortunately very much misleading. It seems that *Gartner primarily focuses on the existance of product features* such as the existence of a WAF (Web Application Firewalls) integration (who needs this BTW?), IAST, RASP and other things that I have never seen applied in a large company. Pretty much like with the “Learning Mode” in the context of WAF.
+
+As for SAST, there are a number of *important aspects* that should be taken into account, and that I do not see sufficiently considered (or consideres at all):
+
+* Maturity of code scanning engine (false positives / negatives)!
+* Scanning model: Source scanning vs. byte code (3rd party lib scanning support)
+* Ease of use (do I need an expert or can my developers use it by their own?)
+* Language & technology support
+* Rule update cycles & custom rule support
+* Definition off custom scan policies & metrics
+* APIs and build integration
+* Bugtracking & IDE integration (are common IDEs supported? Is this for free or do I have to pay?)
+* Privacy controls of a cloud based solution
+* Integration with DAST scanning engine
+* Roles and pribileges model (e.g. possibility for implementing sign-offs)
+* License model, support and existence of professional services
+
+I could name at least the same amount of aspects that are relevant for a DAST solution. But as mentioned, we have to separate them. Also, some vendors have a really good SAST but a crappy DAST technology, now we know why. In practice, companies are not evaluating a SAST and a DAST solution at the same time and even in that case: *What is my benefit in buying both tools from the same vendor if they are not integrated well (or at all)?*
+
+My advice: Use what the Gartner analysts have written as input but do not focus solely on their criteria’s and especially not on the quadrant where a specific product has been put. Create a list of aspects that are important to you and your Organization, make a shortlist and run a vendor presentation with internal applications consisting the most important technology stacks. The http://projects.webappsec.org/w/page/66094278/Static%20Analysis%20Technologies%20Evaluation%20Criteria[Static Analysis Tool Evaluation Criteria (SATEC)], will help you here.

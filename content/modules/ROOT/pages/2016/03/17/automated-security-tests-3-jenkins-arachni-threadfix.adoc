@@ -1,0 +1,180 @@
+= Automating DAST Scans with Jenkins, Arachni & ThreadFix
+:page-date: 2016-03-17
+:page-categories: Security Test Automation
+:page-tags: DAST, Security Testing
+:description: I'm often asked how security tests can be automated with non-commercial tools, e.g. triggered by a Jenkins build. Therefore I decided to write this post, to give you a bit of understanding which…
+
+I'm often asked how security tests can be automated with non-commercial tools, e.g. triggered by a Jenkins build. Therefore I decided to write this post, to give you a bit of understanding which tools you can use and what you have to do in order to accomplish this goal.
+
+To not over complicate this, I will only focus on tools that finds vulnerabilities in *custom code and application config*, such as SQL Injection or Cross-site Scripting (XSS).
+
+As with commercial tools we basically have three types of security test tools that we need to distinguish here: static code scanners (SAST), dynamic code scanners (IAST) as well as dynamic web scanners (DAST). Especially for latter, a couple of good and free tools exist that we can use here. The most popular ones are at the moment most likely https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project[OWASP ZAP] and http://www.arachni-scanner.com[Arachni]. I worked with both tools and personally find Arachni to be the better suitable tool, especially for automated scans. I will therefore focus only Arachni here. Although my examples are based on integrating Arachni into Jenkins, I tried to only use functionality that should be available in any other CI as well.
+
+== Architecture
+
+The following diagram visualizes the components and its interactions described in this post. We have a Jenkins CI, a git repository (could be SVN or any other code repository as well), a tomcat as well as the both tools this post is about: Arachni for scanning and ThreadFix as a database where the results are stored and analyzed.
+
+image::2016/03/arachni-arch.png[arachni arch]
+
+Of course you may also be implement Arachni differently or use other components.
+
+== Preparations
+
+First we need a vulnerable demo app so that we can scan with Archni and see whether its working or not. I've created a rather simple Java-based WebApp that basically has one HTTP form with reflected Cross-site Scriptings (XSS) in each form field that can be exploited via HTTP POST parameters "age" and "name":
+
+image::2016/03/insecurewebapp1-1.png[insecurewebapp1]
+
+The corresponding HTTP request looks like this:
+
+....
+POST /insecure-webapp/ HTTP/1.1
+Host: test3.dev.secodis.com:8888
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0
+...
+Connection: keep-alive
+Content-Length: 63
+Content-Type: application/x-www-form-urlencoded
+
+name=%22%3E%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E&age=
+....
+
+Then we of course need a Jenkins installation set-up, that build our web app and deploys it to a app server. In this case I created a job called *"insecure-webapp"* for our demo app and used Jenkins Tomcat Plugin for its automatic deployment.
+
+=== Installing Arachni
+
+The installation of Arachni is pretty simple. You just need pick the right version http://www.arachni-scanner.com/download/[here] download it on the System where your Jenkins (or other CI) is running and extract it there. That's it.
+
+=== Integrating Arachni into Jenkins
+
+Arachni provides a couple of different interfaces that we can use for automation. Besides a Web GUI there is also a command line interface (CLI) as well as REST and an RPC service that we can trigger. Although one of the latter two seems best suitable for automation, I find the CLI to be the most comprehensive one that is also very easy to integrate. The CLI can be very simply integrated by a shell as a post build step (no Arachni Jenkins plugin exist anyway):
+
+image::2016/03/jenkins-arachni-start-1-768x162-1.png[jenkins-arachni-start-1-768x162]
+
+In this case I just told Arachni to crawl the provided URL but only scan for XSS vulnerabilities. This configuration is good starting point for using Arachni. It is of course not a sufficient configuration for identifying all common Web vulnerabilities, especially not for an enterprise app! The CLI provides https://github.com/Arachni/arachni/wiki/Command-line-user-interface[a lot of options], that you would perhaps need, especially when you want to scan a large application, selecting and configuring test cases, including/excluding certain URLs and providing authentication credentials.
+
+=== Running Jenkins with Arachni
+
+The next time the build is executed, Jenkins automatically grabs the source code from the repository, builds it, deploys it on the Tomcat and scans it with Arachni as we can see it on the following console output (stripped for demonstration purposes):
+
+....
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building insecure-webapp 0.0.2-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+...
+[INFO] Deploying war to http://test3.dev.secodis.com:8888/insecure-webapp  
+Uploading: http://test3.dev.secodis.com:8888/manager/text/deploy?path=%2Finsecure-webapp&update=true
+Uploaded: http://test3.dev.secodis.com:8888/manager/text/deploy?path=%2Finsecure-webapp&update=true (37862 KB at 30756.5 KB/sec)
+
+[INFO] tomcatManager status code:200, ReasonPhrase:OK
+[INFO] OK - Undeployed application at context path /insecure-webapp
+[INFO] OK - Deployed application at context path /insecure-webapp
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 40.183 s
+[INFO] Finished at: 2016-03-15T17:47:28+00:00
+[INFO] Final Memory: 37M/422M
+[INFO] ------------------------------------------------------------------------
+...
+
+[*] [HTTP: 302] http://test3.dev.secodis.com:8888/insecure-webapp
+[~] Analysis resulted in 0 usable paths.
+[~] DOM depth: 0 (Limit: 5)
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/>"'>
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/
+[*] XSS in path: Checking for: http://test3.dev.secodis.com:8888/insecure-webapp/
+[*] Harvesting HTTP responses...
+[~] Depending on server responsiveness and network conditions this may take a while.
+
+[*] [HTTP: 200] http://test3.dev.secodis.com:8888/insecure-webapp/
+...
+[*] XSS in HTML tag: Auditing form input 'name' pointing to: 'http://test3.dev.secodis.com:8888/insecure-webapp/'
+[*] XSS in HTML tag: Auditing form input 'age' pointing to: 'http://test3.dev.secodis.com:8888/insecure-webapp/'
+[*] XSS in HTML tag: Submitting form with original values for name, age at 'http://test3.dev.secodis.com:8888/insecure-webapp/'.
+[*] XSS in HTML tag: Submitting form with sample values for name, age at 'http://test3.dev.secodis.com:8888/insecure-webapp/'.
+...
+
+[*] Checks: xss_tag, xss_dom_script_context, xss_dom, xss_script_context, xss, xss_event, xss_path
+
+[~] ===========================
+
+[+] 1 issues were detected.
+
+[+] [1] Cross-Site Scripting (XSS) (Trusted)
+[~] ~~~~~~~~~~~~~~~~~~~~
+[~] Digest:     3250191067
+[~] Severity:   High
+[~] Description: 
+[~] 
+Client-side scripts are used extensively by modern web applications.
+They perform from simple functions (such as the formatting of text) up to full
+manipulation of client-side data and Operating System interaction.
+...
+Arachni has discovered that it is possible to insert script content directly into
+HTML element content.
+
+[~] CWE: http://cwe.mitre.org/data/definitions/79.html
+[~] References:
+[~]   Secunia - http://secunia.com/advisories/9716/
+[~]   WASC - http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting
+[~]   OWASP - https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet
+
+[~] URL:        http://test3.dev.secodis.com:8888/insecure-webapp/
+[~] Element:    form
+[~] All inputs: name, age
+[~] Method:     POST
+[~] Input name: name
+
+...
+....
+
+As we can see above, Arachni actually finds XSS vulnerabilities in both vulnerable HTTP parameters ("name" and "age") and does this within every build! However, the build still succeeds, since we do not do anything with the Arachni results.
+
+=== Breaking the Build
+
+If we want to flag a build as unstable if Arachni finds a security problem, we need to do a little bit of extra work. As we can see in the console output, in case Arachni didn't find anything, it outputs *"0 issues were detected"*. We can now easily parse the output for this string with https://wiki.jenkins-ci.org/display/JENKINS/Text-finder+Plugin[Jenkins Text Finder Plugin] that is executed as another post build action
+
+If this string is not present, we assume that Arachni found something and tell the Finder Plugin to mark build as unstable. The result is the following output for a positive security finding:
+
+....
+Checking console output
+Build step 'Jenkins Text Finder' changed build result to FAILURE
+Finished: FAILURE
+....
+
+.. resulting in an unstable build:
+
+image::2016/03/jenkins-build-failed-2.png[jenkins-build-failed]
+
+=== Sending Findings to ThreadFix
+
+Regardless of whether you want to have your builds automatically failed when certain vulnerabilities has been found or you just want to monitor existing findings in your applications, ThreadFix is a great tool for that.
+
+http://www.threadfix.org/[ThreadFix] is a web-based tool for collecting findings from different tools such as Arachni. There is a Jenkins plugin available that can be integrated via an additional post build action step very easily so that findings are automatically send to ThreadFix where thex can be monitored and assessed via an Web interface.
+
+image::2016/03/threadfix-screenshot.png[threadfix screenshot]
+
+To be able to parse Arachni scan output, you must use the Arachni report command to convert the .asf files to .xml files via an additional build step though. I use an additional conditional post build step for this that checks if an Arachni report file exists and runs shell command
+
+arachni_reporter $\{BUILD_TAG}.afr --reporter=xml:outfile=$\{BUILD_TAG}.xml +
+to get the file format that we can upload via ThreadFix Jenkins plugin into our ThreadFix vulnerability database as shown in the screenshot above.
+
+There is a community edition of ThreadFix that lacks of some enterprise features (such as ACL based on users / teams, SSOs, etc.) but can be uses without costs, even in an commercial environment.
+
+=== Advanced Configuration
+
+We can of course scan much more vulnerabilities besides just XSS. And we should. When you do not specific test cases Arachni will automatically scan for everything, including platform fingerprinting and SSL checks. Be careful with that as well, because this will most likely produce a lot of false positive. Instead, try to find out which test cases are useful for the tested technology stack (e.g. no SQL injection tests when you are shure that you have a Mongo DB). Start with a simple set-up and include more step by step.
+
+Also, Arachni provides http://support.arachni-scanner.com/kb/general-use/logging-in-and-maintaining-a-valid-session[a number of ways] to login into applications to perform deep scans. Do not scan authenticated sessions in production though since this can have a lot of problematic side effects.
+
+=== Limitations & Other Tools
+
+As mentioned, even with a highly customized Arachni configuration, the approach described here is only supposed to be a cheap and efficient approach for identifying low hanging fruits within the custom code and application config of an Web application, nothing more. If you want to cover more vulnerabilities (or identify them ealier in your SDLC) with free tools, you should also concider using dependency checkers such as https://jeremylong.github.io/DependencyCheck/[OWASP Dependency Checker] (for Java only) as well as static code scanners such as https://find-sec-bugs.github.io/[Findbug Security Plugin] or similar tools.
+
+Especially in this tool categories, both scan quality and integration capabilities of free tools are still very limited at the moment and far behind commercial tools such as https://www.contrastsecurity.com/[Contrast IAST] or https://www.checkmarx.com/[Checkmarx SAST].

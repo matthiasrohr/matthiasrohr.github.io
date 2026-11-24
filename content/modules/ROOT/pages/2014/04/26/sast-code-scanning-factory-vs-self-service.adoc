@@ -1,0 +1,32 @@
+= Code Scanning Models: Factory vs. Self Service
+:page-date: 2014-04-26
+:page-categories: Security Test Automation
+:page-tags: SAST, SSDLC
+:description: A few months ago, Gary McGraw wrote an interesting article on SAST deployments in the field. In it, he basically differentiates two service models:
+
+A few months ago, Gary McGraw wrote an interesting http://searchsecurity.techtarget.com/opinion/McGraw-Software-insecurity-and-scaling-automated-code-review[article] on SAST deployments in the field. In it, he basically differentiates two service models:
+
+. *Code Scanning Factory* (actually he called it "centralized code review scanning factory for code review")
+. *Self Service*
+
+The main idea behind both models is the most fundamental question when it comes to integrating a SAST solution into a company: "who should take the ownership?".
+
+The first model, the *Code Scanning Factory*, can be seen as the classic approach: A central department (often within IT security, not so oft quality assurance) installs this tool on a separate scanning workstation and performs spot checks or periodic assessments on internally or externally developed code.
+
+The deployment for this service model can be really easy (e.g. developer sends a bunch of code to the analyst; the analyst responds scan results within a generated PDF report attachet to mail). But the scanning factory can also be integrated into the development systems as shown in the following diagram.
+
+image::2014/04/sast-deployment2.png[scanning factory sast deployment]
+
+The advantage of this service model is, that in such a way, the assessments can be performed by a specialized. Also: Deployment costs (especially license costs) are at a minimum. The downsides are that scans normally cannot be executed very often, the specialized does generally only have a very restricted understanding of the code and application itself and the development often only gets a PDF report or ticket but not the whole scanning results.
+
+The second approach, the *Self Service*, therefore transfers ownership of security code scanning to the development. Due to IDE plugins that most SAST vendors (such as Fortify, Veracode or Checkmarx) offer, scans can be triggered by the developer himself (e.g. from within Eclipse or Visual Studio). That gives direct and details feedback that lead to a much greater value for the development and the reached code quality. Here are two screenshots that show such integrations for both veracode as well as fortify's Visual Studio integration:
+
+image::2014/04/sast-ide-integration.png[sast ide integration]
+
+Since the second approach requires a whole SAST infrastructure and is therefore in general much more expensive than the first one.
+
+Complete transfer of ownership to the development lead to a clear conflict of interests snce the developer is in this case both tester and tested in one person. Hence this model should only be choosen with an additional central check by security or quality assurance (e.g. within a quality gate). In that case, development has the possibility to check its code beforehand, learn from the results of the tool and even build custom rules. Hereby not only the later quality gate can easily be passed, the code quality itself will benefit massively.
+
+*However, tool or security specialized should exists that a developer can contact in case of a security finding he/she does not understand.*
+
+Modern tool suites such as Fortify, Veracode or Checkmarx also offer integration into build systems (including continuous integration systems) that allows as to set up a continuous security scanning framework. This is perhaps nothing to start with, but a second or third step.

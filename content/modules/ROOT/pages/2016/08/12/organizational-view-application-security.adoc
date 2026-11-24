@@ -1,0 +1,21 @@
+= An Organizational View on Application Security
+:page-date: 2016-08-12
+:page-categories: Secure Software Development, Security Test Automation
+:description: When it comes to integrating application security into an (especially large) organization, we often experience a bunch of practical problems and frustration. In the end, a lot of money may have been…
+
+When it comes to integrating application security into an (especially large) organization, we often experience a bunch of practical problems and frustration. In the end, a lot of money may have been spent, but little or no improvement to the security of developed applications has been accomplished.
+
+The main problem that organizations made is that they have isolated on security activities. For instance, they conduct security training but don't have related requirements for the developers in place, the training is focused on a non-related technology stack or responsibilities for security have not been defined by the management and communicated to the development teams.
+
+After struggling a while with such problems I came up with the following quadrant:
+
+image::2016/08/Quadrant_en-768x432-2.png[image]
+
+The basic message that is visualized here is that *whenever we want to integrate security into an organization we need to consider all* dimensions: organization, guidance & requirements, training, *and technologies*.
+
+Some examples:
+
+* You plan to improve the security know-how of your developers? Identify _roles_ that will be _responsible_ for security, plan the training based on the _technologies_ the teams actually work with, combine them with (secure coding) _guidelines_ that the developers will later be able to use and look up what they heard.
+* You plan to buy a new code scanning technology? Identify _roles_ that will operate it (ownership) first and that receive the _qualification_ to be able to do it, _processes_ that make sure they are actually used and define _requirements_ that it will test.
+
+When you think about this quadrant, you will find that almost any activity for improving application security can be mapped to it. Always considering all four dimensions will often lead to more effort and planning but clearly to a much higher chance of success and less frustration.

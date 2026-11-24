@@ -1,0 +1,148 @@
+= Solving the AppSec Governance Disconnect
+:page-date: 2024-10-29
+:page-categories: General, Secure Software Development
+:page-tags: SSDLC, Security Requirements
+:description: An often-seen anti-pattern in software architecture is the Ivory Tower Architect. It describes architects who work in isolation, disconnected from dev teams or real-world technical constraints. I…
+
+An often-seen anti-pattern in software architecture is the https://agilemodeling.com/essays/enterpriseModelingAntiPatterns.htm#IvoryTowerArchitecture[Ivory Tower Architect]. It describes architects who work in isolation, disconnected from dev teams or real-world technical constraints. I like to refer to this as the *InfoSec Tower Syndrome*. While it's not exclusive to AppSec, it’s particularly prevalent here with InfoSec often unaware of it.
+
+== What is the AppSec Governance Disconnect?
+
+The main reason for that is that InfoSec often struggles to understand this field due to its complexity and the absence of relevant experts. As a result, we frequently encounter the following diagram, which illustrates a disconnect between the InfoSec function and software engineering within an organization.
+
+image::2024/10/AppSec-Disconnect.png[image]
+
+As shown in this diagram, this disconnect occurs in two directions:
+
+. *Poor or Impractical (Security) Requirements*: InfoSec often lacks technical expertise in application security, leading to overly broad or just impractical technical security requirements such as "_encrypt all data_," "_fix every vulnerability_," or "_conduct a pentest for every minor change_”. This not only frustrates software engineers but also often results in requirements being ignored — in the worst case, not just the impractical ones. +
+. *Poor Transparency & Understanding*: There is often limited transparency and also technical understanding of how development teams implement security requirements and manage technical risks within their products. Note: For simplicity, I’ll use the term 'transparency' to encompass both transparency and visibility.
+
+As a result, I often observe that many InfoSec divisions are completely disconnected from the realities faced by their software engineering. While they may believe the organization's AppSec maturity is great simply due to the existence of AppSec policies or even a documented Secure Development Lifecycle (SSDLC), these requirements are often more like Potemkin villages, shiny facades with minimal impact on actually improving security in software engineering.
+
+== Why Are (Good) AppSec Standards Important?
+
+Some may argue now, "What's the problem? Software engineers often know best how to secure their products anyway."  
+
+Aside from the fact that many of the teams I’ve met were far away from being great at security, technical security requirements have become much more diverse. They must now cover several compliance standards and go beyond basic AppSec practices, like preventing SQL injections or protecting secrets, which many teams may be familiar with nowadays.
+
+But more importantly, mandatory standards help to ensure that security requirements are given proper priority alongside other technical and business objectives. When security is handled solely within a project or dev team, it often risks being deprioritized, e.g. by product management, and in favor of especially business requirements which leads to a lot of https://www.veracode.com/blog/managing-appsec/security-debt-growing-threat-application-security[security debt] and, ultimately, to insecure software.
+
+So, there are good reasons why we should improve this situation and bridge the disconnect. Let’s explore some practices that I've found helpful in this context:
+
+== Fixing the Impracticability of Security Requirements
+
+Requirements in AppSec standards can generally be categorized into two types: those specific to an individual application or API (e.g., input validation or encryption), and those that apply to the software development, application, or product lifecycle. While the first type can be referred to as implementation requirements, the second is known as SSDLC requirements; the term "an SSDLC" usually refers to a full set of SSDLC requirements.
+
+The following practices provide guidance on making those requirements more practical:
+
+=== Establish an AppSec Team
+
+As a first step, consider creating dedicated xref:2024/03/31/a-guide-to-organizational-appsec-functions.adoc[AppSec roles] as Subject Matter Experts (SMEs) for this field. For example, forming an AppSec (or ProdSec) team with expertise in both InfoSec and software engineering can act as a bridge between the two. This team can translate high-level security policies into practical, actionable requirements (such as an SSDLC or a secure product lifecycle) that development teams can easily implement.
+
+The existence and integration of such AppSec SMEs are also important for addressing the mentioned understanding gap that contributes to the lack of transparency we'll solve later.
+
+=== Focus on Actionable Security Requirements
+
+Some companies I've met limit their security standards to only what is currently achievable, incrementally increasing requirements step by step. I'm not a big fan of this approach. Instead, I believe a standard should focus on what needs to be achieved. Several strategies can help make these standards more actionable:
+
+* *Put effort into quality:* Work on clarity, achievability, and reasonability of requirements. If effort is saved here, requirements can cause much more work for software engineers later on. A great way to ensure the acceptance of engineers is by involving them in the review process. Have a look at TSS-WEB for inspiration but don’t just copy and paste everything without an internal review process.
+* *Define "draft" requirements:* Requirements that are not currently implementable due to missing dependencies (e.g., a missing tool or process), you could label as "draft" requirements. While not immediately mandatory, they signal future obligations and keep the overall requirements comprehensive.
+* *Focus on objective-based requirements:* Another approach, especially for high-level policies, is to focus on what you want to archive and let dev teams or organizational units (such as projects) decide the “how”. An example of such an objective-based security requirement could be to “_perform dynamic and static security testing before releasing_” instead of requiring the use of a particular SAST tool in every build.
+* *Develop an AppSec framework:* Developing an AppSec framework as an SSDLC implementation guidance can be an effective way to guide teams toward achieving specific security objectives, not just for fulfilling objective-based requirements. For example, in the case of the AST tool requirement above, the framework could describe different tools and processes that teams can choose from to meet this requirement. This flexible approach is particularly helpful for larger organizations with diverse and heterogeneous development environments.
+
+Also, you may think about how to distinguish requirements to make them more feasible for a particular application. Here are some approaches for archiving this:
+
+* *Specify risk-based requirements:* Tailor requirements based on risk (or protection needs) classification: Define requirements according to the application's risk level and its protection needs, while taking implementation effort into account. Define baseline requirements for all applications, and reserve more advanced measures (e.g. enforcing MFA or performing comprehensive threat modeling) that costs more effort to implement for higher-risk or critical applications.
+* *Create team requirements:* Security requirements are often not implemented by dev teams themselves but by a platform, system, or other teams. This is especially true in local contexts the case (e.g., within a specific project). Here, a dedicated security engineering team could simplify organization-wide standards by removing anything that is handled by default, enforced, automated, or the responsibility of other teams—leaving the dev teams to focus only on what truly matters to them. The focus should be here on direct applicability and measurability. For example, a classic team requirement might be: “_Assess SAST scanner results_" or "_Enable auto-updates for 3rd party dependencies_". +
+We could also incorporate such requirements in overreaching (security) DoDs For instance, in the Scaled Agile Framework (SAFe), a common practice is to define ART-level DoDs that apply across all teams within an Agile Release Train (ART) and that are owned by the Release Train Engineer (RTE), not the teams themself. We will revisit this topic when discussing team self-assessments and scorecards below.
+* *Create release requirements:* An alternative approach would be to define security requirements for each release, focusing on automation (e.g., artifact signing, existence of SBOMs, and of course handling of vulnerability management) as part of the continuous delivery or deployment process. This would generally exclude one-time activities like pentesting, which fall outside of release automation. This approach gives teams the flexibility to decide how to meet release requirements before a release. For instance, they could choose to implement SAST and SCA scans for each build or consolidate them within nightly builds to improve build time. A security scorecard (see below) can also be very helpful here, as it provides continuous transparency for teams and can be used to enforce requirements through xref:2023/11/24/how-security-gates-can-work-efficiently-even-with-devops.adoc[an automated release gate] later on. I once worked on a project that put those requirements in a release-level DoD, which helped ensure consistency across releases and enforce them as release policies.
+* *Develop a team maturity model:* Not all requirements need to be implemented for every application, nor at the same time. Creating its own maturity model for dev teams, with levels such as "baseline" and "advanced”, helps align requirements with an individual security maturity stage. This approach provides dev teams with a clear, phased implementation path, ensuring they can progressively improve security by adopting new practices. Such maturity models may address organizational units (e.g. whole projects) or particular dev teams. A common implementation of the latter is known as https://github.com/philippnormann/security-belt/blob/master/README.md[Security Belts].
+
+=== Utilize Security Requirement Tools
+
+Now that we’ve established that many security requirements aren’t universally applicable to every application or API (implementation requirements) or dev unit (SSDLC requirements) in the same way, it makes a lot of sense to streamline them so that a dev team only receives only those requirements relevant to their specific context. Rather than just labeling them, we could provide ticket templates for different types of contexts (e.g. baseline or high-risk applications) or facilitate a requirement engineering tool.
+
+Imagine having a questionnaire that asks a product owner about the type of application that is being developed, and then generates a list of all relevant security requirements directly into the team's backlog. I know of several companies that have developed their own tools for this purpose. Additionally, there’s an open-source tool, https://owasp.org/www-project-securityrat[OWASP SecurityRAT], which provides exactly this functionality. It can integrate with project management or ticketing systems (e.g., Jira), allowing POs to generate relevant user stories directly from its UI.
+
+image::2024/10/SecurityRAT-1024x452.png[image]
+
+'''''
+
+Personally, I would prefer this functionality to be directly integrated into a project management tool like Jira, ideally via a plugin. However, I’m not aware of any existing solution that offers this capability.
+
+== Fixing the Lack of Transparency
+
+Now, let's examine how we can address the second issue: the lack of transparency regarding the security within dev units. The lack of understanding gap I mentioned earlier can be closed by creating the AppSec SMEs I discussed previously.
+
+=== Define Measurable Requirements
+
+Earlier, I emphasized the importance of actionable requirements. Also important is defining requirements in a way that they can be verified—ideally, through automated means.
+
+For example, a high-level requirement like “_Perform Input Validation_” is neither directly actionable nor measurable. While it might be suitable for a high-level policy, it is not specific enough so that most developers would know what to do.
+
+A much clearer requirement for an API project might be:
+
+_Enforce strict input validation using OpenAPI Schema. Avoid using unrestricted String data types whenever possible; instead, use more constrained types such as formats_ _(e.g. email), enums for predefined sets of values, regular expressions for pattern-based validation, or numeric data types (e.g., integer) where appropriate._
+
+This requirement is both actionable and measurable. While it may not be suitable for a broader policy, it serves well as a team-specific requirement within its particular scope. Its implementation can be tested, for example, by using automated tools such as API scanners. Also, teams could easily verify their compliance with this requirement,
+
+=== Implement AppSec Risk Management
+
+Almost everything in security revolves around either compliance or risk management. While InfoSec typically addresses these in a formal and explicit way, engineering often handles them implicitly. For instance, when engineers implement security practices, they are actually engaging in a form of implicit risk management. However, explicit risks identified during engineering processes—such as through threat modeling or composition analysis—are often not tracked or made transparent to InfoSec. This gap occurs because the tools and processes used for risk management are used (and perhaps also designed) to focus on broader, more generic InfoSec risks.
+
+These tools are often not designed with engineers in mind, making them difficult to use in practice. An alternative approach I’ve observed is implementing a risk register using a ticketing system. The following screenshot shows a custom risk issue type that was created in JIRA with custom files like risk scoring and dedicated risk workflow. Other solutions offer similar possibilities.
+
+image::2024/10/JIRA-Risk-Issue-Type-Secodis.png[image]
+
+Tracking risks allows linking them to certain vulnerabilities and tickets of teams that mitigate them. These risks could be made transparent to InfoSec in two ways (1) they could access the ticket system using risk dashboards to track them and (2) they could import these risks into their risk management tool or create links to maintain synchronized oversight.
+
+Effective risk management also requires InfoSec to continuously monitor existing risks and regularly engage with risk owners to ensure ongoing oversight and timely mitigation efforts.
+
+=== Adopt and Monitor ASPM/ASOC Tools
+
+Today’s security tool sprawl — with numerous AST tools like SAST, SCA, Secret Scanner, and DAST that teams have to monitor —creates a significant amount of noise and leads to team overload. As a result, not even teams themselves are often able to monitor their own security findings, let alone InfoSec which may not even be aware of these tools' existence. Tools that aim to improve this situation are known by the acronyms ASPM (Application Security Posture Management) and ASOC (Application Security Orchestration and Correlation) —both of which have become increasingly popular in recent years.
+
+http://www.defectdojo.org[DefectDojo], a popular and free ASOC tool, exemplifies this shift. It consolidates security findings from various security scanners (e.g., SAST, DAST, SCA) through a correlation engine. It supports applying a shared ownership model, enabling software engineers to manage their own findings while enforcing SLA policies and facilitating risk management. This approach significantly enhances visibility into the security posture of individual dev teams or specific products, especially in combination with a security engineering team.
+
+=== Use Tickets to Track the Implementation of Security Requirements
+
+Ok, this might sound like a pretty obvious tip, it’s often underutilized in this context. Many organizations that I've met document their SSDLC, publish it internally and then rely on (or hope for) organizational units to follow it. While some may conduct an initial assessment with them, it alone does not provide meaningful visibility.
+
+To improve this, we may facilitate project management tools of particular org units (even if there is more than one used in the organization) to track SSDLC adherence more effectively:
+
+. *Create Security Capabilities or Epics*: Incorporate more complex security requirements or initiatives as Capabilities or Epics in the backlogs of projects and/or solutions. This ensures their proper prioritization and enables effective progress tracking. By working at this level of abstraction, dev units can define their own implementations for security requirements while maintaining transparency with InfoSec through this overarching Capability or Epic. This approach facilitates alignment on security objectives without restricting teams to a single method of implementation.
+. *Periodically Create Self-Assessment Tickets*: Assign tickets directly to teams to self-assess their current implementation state of assigned team requirements. These tickets should break down specific tasks for each security requirement, allowing teams to easily close them as completed when implemented. Such tickets can be periodically cloned (e.g., annually) and added to a team's backlog to update the current state of implementation.
+
+There are likely more ways to enhance transparency using a project management tool, based on the specific practices applied a a particular organization. But let’s move on and examine how to automate this process to improve efficiency and scalability.
+
+=== Provide Security Scorecards and Dashboards
+
+Scorecards in software engineering are typically used to track and monitor metrics of codebases. In the context of security, a well-known implementation is the https://openssf.org/projects/scorecard/[OpenSSF Scorecard] project, which assesses the trustworthiness of GitHub repositories. However, this approach can also be applied to track security metrics within our own repositories.
+
+This approach is particularly useful because many team security requirements are nowadays implemented or visible there. For example, a scorecard could be used to check if AST tools are correctly integrated in the build pipeline, secrets are properly protected, IoC security settings, or repository configurations such as enabled merge/pull request approvals or restricted ACLs. We could also connect a scorecard with AST or ASOC/ASPM tool to include vulnerability metrics.
+
+The following screenshot shows an example of such a scorecard implementation that I’ve recently written a POC for. The idea is that each team can use it to continuously scan their own codebases to check their current state of implemented security requirements. The JSON output could be facilitated within the build pipeline as well. This approach could also be easily scaled to scan multiple repositories at once, with results visualized in a dashboard (e.g., Grafana) for ongoing issue tracking and improved oversight.*              *
+
+image::2024/10/Security-Scorecard-1024x384.png[image]
+
+This is why I emphasized the importance of defining measurable security requirements above — because it enables us to test them automatically as demonstrated here. Using such an approach enhances the visibility of security requirements and generally leads to greater acceptance among software engineers because it is now transparent to them what they have to do to deploy an artifact in production. Security dashboards could also be built to collect security metrics from other systems – for instance from like from a ticketing system such as JIRA.
+
+By combining multiple sources, InfoSec can continuously monitor security KPIs for specific dev teams or, in aggregate, for organizational units, such as:
+
+* *Codebase Compliance & Health:* Scorecard results, open vulnerabilities
+* *SSDLC Compliance & Health:* SSDLC practices implemented and performed (e.g. training, threat modeling performed), MTTR (Mean Time to Remediate), or MTTU (Mean Time to Update)
+* *Security Risks*: Open AppSec risks owned by the particular unit
+
+Especially MTTR https://www.darkreading.com/cyberattacks-data-breaches/mttr-most-important-security-metric[proves to be a valuable metric] for assessing a dev team’s effectiveness in managing product security. It provides insight into how quickly a team can address and resolve security issues, which is a strong indicator of their overall security responsiveness and prioritization.
+
+== Conclusion
+
+The disconnect between governance and software engineering is a common issue in many organizations, one that InfoSec functions may not even fully be aware of. To fix this, we should focus on two main areas: (1) making security requirements in AppSec policies & standards more practical and clear, and (2) increasing transparency around requirement implementation and associated security risks within dev teams and software artifacts.
+
+Ensure each requirement is both actionable and measurable. Clearly define specific actions that software engineers need to take and include measurable criteria for tracking its progress and ensuring transparency and accountability.
+
+Tailor requirements so that software engineers only see those relevant to their work. Reduce the number of requirements by leveraging automation, secure defaults, and guardrails where possible. Automate security compliance checks and provide teams with the tools to self-monitor the security health & compliance of their code.
+
+While smaller organizations may only need to define one set of requirements, larger ones would have to build multiple abstraction levels, e.g. an AppSec policy, an SSDLC, frameworks, and (project-specific) team requirements. This layered approach ensures that each target audience receives relevant, actionable requirements tailored to their specific context, while still aligning with the organization’s broader governance objectives.
+
+*Disclaimer:* The opinions expressed in this article are solely my own. The purpose is to encourage dialogue and not to solicit consultations or offer professional advice. Feel free to join the discussion on LinkedIn!

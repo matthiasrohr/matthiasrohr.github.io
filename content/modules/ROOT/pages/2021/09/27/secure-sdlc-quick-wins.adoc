@@ -1,0 +1,160 @@
+= SSDLC Quick Wins
+:page-date: 2021-09-27
+:page-categories: Secure Software Development
+:page-tags: SSDLC, Security Requirements
+:description: Securing the software (development) lifecycle of a large organization will usually take a lot of time. Especially when you have to start very much at the beginning.
+
+Securing the software (development) lifecycle of a large organization will usually take a lot of time. Especially when you have to start very much at the beginning.
+
+It’s therefore vital to focus on quick wins first — measures that are effective and easy to implement at the same time. This is not only important from a risk perspective but also to archive quickly visible successes of your initiative and to show its value to your organization. Also, not everybody is able to run a large-scale application security program, implementing quick wins should usually be possible though.
+
+Here is my personal top ten list of quick wins:
+
+== #1 — Promote Software Security Principles
+
+Creating and establishing comprehensive secure development requirements, e.g. in the form of an AppSec policy, standards or internal AppSec frameworks is important to establish a baseline but it will usually take a lot of time. Even if you use a template such as https://tss-web.secodis.com[TSS-WEB] you will still have to adapt it to your organization, discuss it with many relevant stakeholders, make the organization aware of it, and plan its implementation.
+
+Therefore, I find it really useful to start with a set of important security principles that are easy to comprehend and agree on. Here are some examples of such principles that can be described and linked to relevant mitigation controls:
+
+. Security is not a feature
+. Assume that the network is not secure & data is untrusted by default
+. You are responsible for the security of your own code
+. Discuss potential threats of features & changes before implementing them
+. Implement & automate security tests where possible
+. Only use mature and secure technologies
+. Try to prevent vulnerabilities from being introduced in the first place
+. Regularly question security assumptions from the past
+. Continuously improve
+. Share your knowledge
+
+Such a set of simple principles is especially useful for explaining the most important security practices and relevant measures to developers when it is supported by management. Managing support is a crucial aspect here and it will be usually much easier to archive for a shortlist than for a complex policy.
+
+You may want to call this your *Software Security Manifesto* if you need a catching title. Have a look at Synopsis https://www.synopsys.com/software-integrity/resources/ebooks/agile-security-manifesto.html[Agile Security Manifesto] or the https://ruggedsoftware.org/[Rugged Software Manifesto] for reference.
+
+== #2 — Organize AppSec Awareness Workshops
+
+A general understanding of important security threats and best practices for applications is a vital requirement for every developer. Many companies try to approach this by conducting comprehensive secure coding training for developers.
+
+From my personal experience, the effect of such training is often quite limited though. Especially when developers haven’t been much in contact with security practices before. Such training can even have an adverse effect — e.g. a negative mindset towards security.
+
+Therefore, I recommend starting with short (~ 90 minutes) technical awareness sessions that focus on motivations behind AppSec measures, common AppSec threats (e.g. based on https://owasp.org/www-project-top-ten/[OWASP Top Ten]), best practices, and of course the software security principles from above. Do not only offer this to developers but to the whole team’s members plus (!) product owners. The latter is so important because they are the ones who need to understand the importance of such measures at most.
+
+_Tip: It usually does make a lot of sense to also address other important stakeholders, such as management, product owners, etc., but with a customized session format._
+
+Technical AppSec awareness workshops are a great first stop in order to promote a learning culture in your organization. In the next step, you could still conduct in-depth training sessions with practical exercises, but perhaps only with a reduced group of developers. Also, specialized computer-based training solutions exist that work great on demand and could complement such activities.
+
+== #3 — Engage with Dev Teams
+
+Security should be the responsibility of every dev team. We call this https://www.csoonline.com/article/3297947/secrets-of-shift-left-success.html[shift left]. 
+
+Therefore, you should work closely with your dev teams and help them improve their code and understand potential security threats. This is also important to get continuous input for the requirements you’re working on. It does not matter if you cannot provide a comprehensive requirement framework at the beginning. 
+
+_Tip: Start informally by discussing existing security controls, potential threats, and relevant mitigations with your dev teams._
+
+Such xref:2020/01/05/agile-threat-modeling.adoc[threat modeling] sessions do usually not take much time and are very efficient. As a next step, you can develop tools, templates, processes, or catalogs that help you improve this activity over time.
+
+_Tip: Try to engage with new development projects early, e.g. by participating in relevant architecture sessions. At this early point of development, you are often able to have a great security impact, even without a finished security standard or policy._
+
+Many organizations gained really positive experiences with internal security coaching (or consulting) that they provide to their dev teams. Such a coach could participate in relevant refinements, planning events, and/or within a dedicated Security Jour Fixe (aka Security Refinement). You could also establish regular office hours by which coaches are available for anyone and without a meeting invite.
+
+Typically, such coaching roles are filled at first by an external consultant (therefore a quick win) but could be provided by internals at a later time.
+
+== #4 — Start an AppSec Security Community
+
+Establishing a positive security culture is perhaps the most essential aspect of all. You will not be able to archive much without it. Have a look at the https://www.salesforce.com/content/dam/web/en_us/www/documents/industries/government/salesforce-approach_to_security.pdf?d=cta-body-promo-1352[Salesforce approach] to see an interesting case study on how it can work.
+
+One important aspect here is security communities for developers. This sounds like much and can in fact include a lot of activities but you can start very small, for example with a regular security JF. It is really helpful to set up an application security portal (e.g. in your Confluence) that you use to work on requirements and guidelines with the community and to share results with the rest of the development organization.
+
+You can open the security community to everyone or work with a https://owasp.org/www-project-security-culture/v10/4-Security_Champions/[Security Champion] model. In that case, one or two developers of each team are appointed to act as a voice for the team (Mozilla) and participate in the community. You may also provide specific training for those engineers so that they are able to enable their teams in terms of applying security practices.
+
+_Tip: Create a community wiki and collect meeting minutes, polls, and other relevant information there._
+
+== #5 — Create Useful Guidance
+
+Many organizations already have documented requirements or guidelines on secure coding practices. Unfortunately, though, these are often either based on a lot of copy-and-paste, lists of external links (e.g. to various OWASP sites), or just far from finished. Such documentation may of course then serve only as a fig leave to be presented when someone asks for it, but will most likely not result in more secure applications.
+
+So it makes a lot of sense to first focus on guidelines and questionnaires such as checklists that are practicable. By practicable I mean (1) easy to understand and apply (2) focussed on relevant aspects (3) limited in their length.
+
+Some examples:
+
+* A list of the ten most important coding measures for relevant programming languages.
+* A questionnaire for product owners that helps them identify relevant security requirements based on technical questions.
+* A list of simple attack vectors that functional testers can use for lightweight security tests.
+* Hardening checklists for most relevant tech stacks.
+* A pre-release checklist that outlines important security tasks for each release.
+
+The latter one actually provides a form of a lightweight security gate based on a self-assessment by which teams/projects can figure out if they miss something. But the focus here should really be what is actually helpful. Don’t try to cover all existing threats or measures.
+
+_Tip: Create an AppSec portal and publish all guidance, links, and your community pages there._
+
+== #6 — Implement Secure Defaults 
+
+The best way to mitigate a vulnerability is to prevent it from being introduced in the first place.
+
+There are several ways to accomplish this. Perhaps the best one is to address security concerns on the architecture level and when you select a certain technology like a programming language or framework. There are huge differences in terms of security.
+
+But even if this has already been selected, we can at least set or use secure defaults, for instance in templates or blueprints. These are settings that a developer needs to explicitly change to make the code insecure. 
+
+JSTL is a good example of a very simple secure default. If you output a variable using the https://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/out.html[<c:out> tag]
+
+....
+<c:out value="${content}" />
+....
+
+it gets automatically HTML entity encoded by default which usually prevents Cross-site scripting (XSS). A developer must explicitly set “escape=false” to circumvent this default setting. Other modern view technologies work in a similar way.
+
+Frameworks like https://angular.io/guide/security[Angular] do it even better by making it so hard for developers to inject JavaScript code that you will usually not find many Angular-based applications with an XSS. There are a lot of similar possible defaults for other vulnerabilities (e.g. encryption, information disclosure, error handling, XXE, SQLi).
+
+Being able to define secure defaults must not require a framework that supports it explicitly. You will often be able to overwrite insecure defaults, e.g. using boilerplates, templates, or provisioning scripts. This is not limited to code but also to deployments, configurations, etc.
+
+_Tip: In case you don’t have templates or blueprints to implement defaults, it may be a good reason to create them._
+
+== #7 — Automate Simple Security Checks
+
+This brings us to my next point: security automation. There are many tools, both commercial and open-source, that can be used to scan for vulnerabilities in code, dependencies, and configuration. Automating such tests can be a great quick win if you focus on tools that are easy to integrate (e.g. in your Jenkins pipeline or IDE) and that have decent good results for a particular technology (e.g. https://github.com/spotbugs/spotbugs[SpotBugs] for Java, https://golangrepo.com/repo/securego-gosec[Gosec] for Go, or Semgrep). You should begin with high-risk vulnerabilities and fix them and low-hanging fruits, respectively. If you have to evaluate and introduce a completely new tool here, then this will be probably no quick win of course.
+
+I really like the concept of using https://blogs.vmware.com/opensource/2020/02/03/git-repo-pre-commit-hooks/[pre-commit hooks for simple security checks]. The idea here is to implement simple but very accurate checks that are automatically executed on every committed code and refuse a commit if something is found. There are a couple of scenarios that you’ll be able to implement here. For instance for the detection of insecure algorithms, settings, or committed secrets (see below). Have a look at https://pre-commit.com/[pre-commit.com] for more examples here.
+
+Another quick win is to implement or extend https://owaspsamm.org/model/verification/requirements-driven-testing/[functional security tests] for existing security controls (e.g. testing various authentication and access controls). According to the https://privacyrights.org/[Privacy Rights Clearinghouse], a vast number of data breaches occur due to incorrectly implemented technical (security) controls. It is therefore vital to implement comprehensive tests here for both positive and negative use cases. This does often not require many resources.
+
+Lastly, simple security automation can also include automatic remediation. This works usually great in cloud environments where we often use Lambda functions to deactivate risky IAM permissions. But we can also apply this thinking to many on-prem or application-level scenarios.
+
+== #8 — Harden Applications
+
+Application hardening is another field where you can reach a lot of impacts quite quickly without changing a single line of code.
+
+Have a look at your productive applications, especially those exposed to the Internet but not only them. Remove functionality, services, and routes that are not required or protect them with IP binding or something similar if possible. We call this attack surface reduction.
+
+Make everything available by TLS and harden your TLS stack. There are a lot of tools such as https://www.ssllabs.com/ssltest/[Qualy’s SSL Server Test] that help you with that. Please note, that being able to secure the application level requires that the network and host layer are already secured.
+
+A great quick win is to activate a common https://secodis.atlassian.net/wiki/spaces/TSSWEB/pages/1015832/Appendix+A+Requirements+for+HTTP+Security+Header[HTTP security header.] Most of them have very limited risks of impacting an application's functionality and can therefore often be set centrally (e.g. on a load balancer). practically There are a lot of https://securityheaders.com/[useful tools] that help you find the right header and settings as well.
+
+If you have a Web Application Firewall (WAF) already available in your organization consider using it as an additional layer of protection for all your internet-facing applications. A WAF will not replace secure software development but can reduce the exploitability of vulnerabilities in production, which is especially important for applications that are not actively developed or tested.
+
+== #9 — Protect Application Secrets
+
+Disclosure of application secrets (e.g. technical prod credentials / API Keys, symmetric keys, or X.509 private keys) are a major reason for many of today’s data leaks. So protecting these secrets is crucial.
+
+One major problem here is that secrets are stored in code or as plaintext in config files. Luckily, a couple of tools such as https://github.com/michenriksen/gitrob[GitRob], https://thoughtworks.github.io/talisman/[Talisman], https://github.com/trufflesecurity/truffleHog[Truffle Hog], or https://docs.gitlab.com/ee/topics/autodevops/[Git Secrets] exist that you can use to easily identify secrets here and that you can integrate into your CI. 
+
+_Tip: Use prefixes when you generate secrets (e.g. “myapp-api-key”) and create relevant regexp for your secret scanning tool. This helps you to easily identify leaked secrets with zero false positives._
+
+There are a couple of ways to protect secrets. Perhaps the best one is by injecting them from a secure (and secured) secret vault such as https://www.vaultproject.io/[Hashicorp Vault], https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html[AWS Secret Manager], or https://github.com/square/keywhiz[KeyWhiz]. Since implementing such a system is not always that easy, you could look for other ways to protect your secrets better, at least until you have a vault. For instance, you could store relevant config files in your prod environment.
+
+== #10 — Perform Lessons Learned after Pentests (and Incidents)
+
+Pentests are a great method for identifying common vulnerabilities (known unknowns), as well as quite unexpected ones (unknown unknowns), in an application. The value of a pentest is therefore quite undisputed and widely used, especially by larger companies — 87.7% of the http://www.bsimm.com[BSIMM11] participants used it. Personally, I don’t know any larger organization that is not conducting pentests, at least of their internet-facing applications.
+
+If you are not performing regular (external) pentest yet you should start using them, ideally regularly and based on a https://secodis.atlassian.net/wiki/spaces/TSSWEB/pages/98368/6.+Security+Tests[testing policy].
+
+And if you are, you should think about how you can improve such tests and results. One important aspect is to discuss the findings afterward. Think about how you could prevent findings from being introduced again (e.g. by establishing secure defaults or by integrating automated security checks) and document findings that you cannot or will not fix for some reason so that the next pentest does not report them again.
+
+Lesson-learned sessions are very valuable for continuously improving the security of your applications and your SSDLC. They should not be limited to just pentests but also applied to other activities, especially incident management.
+
+== Conclusion
+
+There is a lot you can do to improve the security of your software development within a limited time frame and with limited resources. Focussing on quick wins (or low-hanging fruits) is a virtual part of a large-scale security initiative as well because it allows you to archive quick successes and prove the practical value of your initiative for the organization.
+
+Of course, there is usually much more to do than just implementing quick wins. Therefore, begin working on other, medium- and long-term, activities in parallel (e.g. your AppSec roadmap, AppSec strategy, AppSec framework, or AST tool evaluation) to not lose time.
+
+Also, start by understanding how software development works in your organization, what software is in development, what technologies are used, what applications are in production, and which of them are exposed to the Internet.

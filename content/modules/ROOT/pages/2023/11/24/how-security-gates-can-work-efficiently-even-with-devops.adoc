@@ -1,0 +1,176 @@
+= Implementing Smart Security Gates in Modern Software Development
+:page-date: 2023-11-24
+:page-categories: Secure Software Development, Security Test Automation
+:page-tags: DevSecOps
+:description: In modern software development, there is a strong emphasis on aspects like speed and productivity. At first glance, this may appear to contradict a mechanism like a security gate, which, by…
+
+In modern software development, there is a strong emphasis on aspects like speed and productivity. At first glance, this may appear to contradict a mechanism like a security gate, which, by definition, interrupts the process. At first glance, this may contradict in contrast to a mechanism like a security gate. That's why many seem to have strong reservations against it.
+
+I believe the primary issue here is not so much that security gates are not needed anymore, it's more that they are often designed and perceived with a rather traditional mindset. In this post, I will therefore discuss how the concept of security gates can be integrated into modern (continuous) software development, enabling them to play an important role in ensuring and prioritizing security. Moreover, various security gating mechanisms are actually already widely employed in this field, just under different names. For instance "admission controller", "binary authorization", or "pull request approvals".
+
+So it makes a lot of sense to start by defining what a security gate actually is.
+
+== What is a Security Gate?
+
+A *security gate* is a mechanism that interrupts the software development or delivery process when a particular security policy is violated or certain security-related criteria are satisfied. It can be implemented at various stages and ways, ranging from full automation to being applied only at the process level with no tool enforcement.
+
+According to this definition, a security gate can be implemented not only between process steps but also within them. It could be a form of quality gate, but also any form of security policy that is applied and enforced on an artifact within the process. This is an important distinction because it allows us to cover more with this term, as perhaps originally intended.
+
+The purpose of a security gate can be understood from two perspectives (1) Ensuring that security requirements are met during the development or delivery process, and (2) ensuring the identification and resolution of identified security issues, thus reducing the risk of vulnerabilities entering the final product.
+
+A *smart security gate* is a security gate that is designed to minimize disruptions during build or deployment. This is achieved by thoughtfully selecting and customizing facilitated procedures, tools, tests, and policies based on risk considerations.
+
+== Common Problems
+
+Security gates can cause a lot of problems when implemented poorly. Here are two common examples:
+
+=== Security Gates in Build Pipelines
+
+Build pipelines are a popular place for integrating all kinds of AST tools like SAST, SCA, DAST, etc. So it might seem to be an obvious approach to follow the https://devops.com/fail-fast-how-shifting-security-left-speeds-development/[fail-fast principle] and to trigger a build failure here when a specific security threshold (e.g. ">= 1 medium vulnerabilities") is met. Gates at this location can be highly effective and valuable, especially for continuous deployment where we need to fail fast and in combination with a sound policy with tests that produce minimal noise.
+
+However, this implementation pattern remains controversial for several reasons:
+
+. AST tools, in particular, generate a significant amount of noise (false positives), and many findings require considerable time for verification and mitigation.
+. Not all projects necessitate continuous deployment, and there is often a substantial time gap between build and deployment for teams to fix a vulnerability before deployment.
+. Newly identified vulnerabilities are often already present in production.
+
+In this context, a security gate can quickly become an annoying obstacle, slowing down development teams. Since dev teams often manage their own build pipeline, I advocate granting them the autonomy to decide whether to enforce security measures or opt for a notification mechanism. Security could later be enforced during deployment, but using the same policy that teams use within their build pipeline. Regarding the third aspect mentioned above, we will later discuss how this can be addressed using an SLA-driven approach that is based on objectives for vulnerability resolution.
+
+=== Intransparent Release Gates
+
+Another common form of a security gate is enforced at the end of development, just before releasing an application (or artifact). A typical example is a penetration test or other forms of security assessment. As we will see later, this type of gate can function as a sort of safety net, but only if certain quality criteria are met and usually not when there are time-consuming manual assessments involved that may lead to new security requirements.
+
+So let's look at a few examples of how we can handle security gates more effectively:
+
+== Process Gates
+
+Like quality gates, security gates can be integrated at both the process and project lifecycle to *enforce required security practices*. Particularly during the early project phase, these gates can prove highly valuable. For example, they can ensure that a secure design review or threat modeling has been conducted in the design phase or that a penetration test has been planned in time and conducted.
+
+After go-live, such security gates often transition into periodic or retrospective security measures, avoiding disruptions to continuous delivery. However, organizations that deliver large releases may still opt to enforce a security gate for subsequent releases to maintain control. To optimize gate efficiency here and align it with risk management, it's highly beneficial to assess the security risk associated with a specific release and enforce the security gate only when the risk surpasses a defined threshold.
+
+Typical cases where this could apply are:
+
+. *Initial releases*
+. *Architectural Changes*
+. (Major) *Security Changes*
+
+Below is a screenshot illustrating the implementation of a risk-based security gate within a release process built with JIRA. The idea here is that the release is initiated in the workflow tool very early, allowing the product owner to be informed about all the necessary security requirements for its successful progression.
+
+In this example, the gate leverages data sourced from a CMDB, such as the application's protection classification, and insights provided through either a risk form or an automatic evaluation of stories and labels assigned to a particular release.
+
+image::2023/11/JIRA-Risk-Calculation-1-1024x513.png[image]
+
+Therefore, a security gate ticket is only created for releases that exceed a certain level of risk (e.g. >= "high"), the policy for that can be defined individually. The deployment of that particular release can then be prevented until the security gate ticket is closed, or the gate may be designed to allow deployment, at least in certain circumstances, but must be closed within a short time window to allow hot-fixing and continuous deployment. Until the gate ticket is closed, the associated release ticket will remain unable to be closed.
+
+Closing a gate (a gate ticket) may require specific permissions assigned to a designated security role, such as a member of the AppSec team, a security architect, or a dedicated security engineer. In this scenario, the gate ticket could be automatically assigned to the AppSec team, which has a certain SLA to respond (e.g., to request a security review session), if not asked nicely by the dev team to be quicker. The underlying idea here is not to control but to support development teams in making critical security decisions.
+
+The gate itself can have different subtasks automatically created to outline the necessary steps based on the assessed risk for closure (e.g., 'update threat model' or 'reach out to security architect'). In this scenario, we may also decide to just implement a condition, instead of required permission, that allows a gate ticket to be closed only if all its underlying subtasks are closed. This would help development teams become aware of the required SDLC security practices and encourage their adoption.
+
+So there are many different implementations that can be considered here, ranging from manual reviews by a separate security role to full automation. The most suitable approach for an organization may depend on factors such as their level of automation, the security maturity of their dev teams, and the overall risk. Importantly, these process gates can, of course, be integrated into the development process even in the absence of a tool-based system to ensure their enforcement.
+
+== SCM Gates
+
+The next type of security gate is one that is often overlooked. Its primary idea is to *proactively block insecure code from being pushed* to a source code management system (SCM), or, to be more precise, on a protected branch, typically "main" or "master".
+
+There are essentially two methods to accomplish this:
+
+https://pre-commit.com/hooks.html[Pre-push checks] are automatic scripts that verify code commits before they are accepted to be pushed on a protected branch (e.g. a master or release branch). Security checks that are implemented here must be almost 100% accurate because they would otherwise not work and therefore not be accepted by developers. Some examples of such a gate are:
+
+* Secret scanning (tip: when you generate secrets, use predefined prefixes so that you can easily identify them in the code using a RegExp),
+* enforcing signed commits,
+* rejecting problematic file types,
+* identifying the use of insecure or EOL dependencies (some commercial AST tools allow this), and
+* insecure or non-compliant configurations, including IaC statements (e.g. in a Docker or Terraform file).
+
+An excellent example of implementing a pre-push check is https://docs.gitlab.com/ee/user/project/repository/push_rules.html[Push Rules] in Gitlab. They are easy to configure and allow us to enforce much security before code can be pushed in a repo.
+
+image::2023/04/image-1024x679.png[image]
+
+https://blog.shiftleft.io/inserting-security-in-pull-requests-in-a-developer-friendly-way-4dbc9f9997c4[Pull/Merge request approvals] ensure that all code committed to the protected branch undergoes a review by a second developer. Providing training and guidance can empower developers to effectively spot security issues at the code level. Gitlab, in particular, handles https://docs.gitlab.com/ee/user/project/merge_requests/approvals/[merge request approvals] quite nicely:
+
+image::2023/04/image-1-1024x362.png[image]
+
+== Deployment Gates
+
+The perhaps most important objective of a security gate is to prevent insecure artifacts from being deployed in production.
+
+An important aspect here is to ensure security and at the same time to minimize deployment delays, particularly in the case of continuous deployment. Here we need to identify relevant security issues as early as possible during development (fail fast). Ideally, developers would receive immediate feedback about potential security policy violations while writing or building insecure code, or when including an insecure dependency. Modern AST tools offer diverse scanning and alternating capabilities - e.g. within the developer IDE, of merge/pull requests, within build pipelines, or indirectly by monitoring the repositories.
+
+As mentioned earlier, I would usually recommend leaving it to the teams how they prefer to be alerted and react to a security issue, as long it is ensured that it is fixed/managed before the artifact is released. In such a multi-layered approach, the security gate primarily has the role of a *safety net* that should be avoided so that it does not interfere with the development or delivery process. Therefore, it's vital that the security gate policy is always transparent to the dev teams and that they can run the same checks whenever they want during development, e.g. locally or in their build or UI.
+
+The following screenshot shows a good example of how a security gate could be implemented using https://docs.sonarqube.org/9.6/user-guide/quality-gates/[SonarQube]:
+
+image::2023/02/image-8.png[image]
+
+This approach is not only transparent to dev teams (they can always check if their code violates a security gate), but like many other modern AST tools, it also allows us to limit the scope of the gate to only new code. This could be really helpful as a starting point when you already have a large existing code base full of vulnerabilities and want to ensure that new code is safe. This restriction makes actually a lot of sense for a security gate because we may not need to stop a vulnerability from going live that is already there.
+
+Instead of evaluating the results of AST tools directly, it has become https://owasp.org/www-project-devsecops-guideline/latest/[a common practice] to import AST findings from different tools to a central vulnerability management tool like https://www.defectdojo.org/[DefectDojo] and access its API for evaluations. Here you have also the possibility to define and track vulnerability remediation *SLAs* (or https://www.atlassian.com/trust/security/bug-fix-policy[SLOs]) such as "_High-severity vulnerabilities must be fixed within 10 days in production after being verified_" and combine it with an approval process in case a dev team is not able to fix a vulnerability in time. Teams may, however, be allowed to override a severity or add risk criteria to it so that its rating changes.
+
+Now, you might wonder why we need a gate in an SLA-driven approach at all? Well, first of all, the focus of SLAs is not so much on vulnerabilities in new code. For example, when a developer writes insecure code and receives direct feedback from his/her IDE, or at least from the build pipeline, I would argue that if a gate prevents the deployment of such code later, it's not the gate slowing down development; it's the developer in this case. Of course, this requires the ability to distinguish between new and existing code.
+
+In terms of SLA violations themselves, you may not necessarily verify them using a deployment gate but instead, trust an alerting mechanism and reporting instead. However, in cases where this rather soft feedback mechanism doesn't work, we may decide to enforce SLA violations, at least of a certain severity, at such a gate. Note that an SLA-driven vulnerability management approach only outlines the standard process. It is, of course, still possible to act quicker if necessary, but this would then fall under the *incident management* process.
+
+Another approach that I sometimes see applied is to use a gate to assess the verification status of tool findings. The concept is that many AST tools and defect trackers often allow developers to rate and comment on findings. In the gate, we can then utilize the API of these tools to check if tool findings of a certain severity have been at least verified and commented on by the developer. This approach doesn't prevent insecure code from being deployed of course; its primary goal is to ensure that these findings have been noticed.
+
+There are certain security aspects that we can handle much more strictly, typically those related to insufficient hardening or insecure settings. For example, in the cloud native domain, we can enforce security policies on images using *admission controllers* such as https://github.com/open-policy-agent/gatekeeper[OPA Gatekeeper], https://kyverno.io/docs/introduction/[Kyverno], or https://docs.sigstore.dev/policy-controller/overview/[Sigstore's Policy Controller]. This includes checks like the use of proper hardening & base images, the existence of an SBOM, provenance, and proper artifact signing. By evaluating provenance, we could also enforce all kinds of expected aspects of the build process itself.
+
+The following https://boxboat.com/2021/12/06/secure-supply-chains-kyverno/[code snipped] shows an example of an admission controller with Kyverno to verify build provenance and to only allow artifacts built on a particular build system. In this case, artifacts without the expected attestations in combination with a valid signature are not allowed to be deployed in production. Although a little bit older (the attestation _recipe.type_ has been replaced), I find that it really nicely illustrates the use of an admission controller:
+
+....
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: attest-code-review
+  annotations:
+    pod-policies.kyverno.io/autogen-controllers: none
+spec:
+  validationFailureAction: enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  rules:
+    - name: attest
+      match:
+        resources:
+          kinds:
+            - Pod
+          nameSpaces:
+            - prod
+      verifyImages:
+      - image: "registry.io/org/*"
+        key: |-
+          -----BEGIN PUBLIC KEY-----
+          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHMmDjK65krAyDaGaeyWNzgvIu155
+          JI50B2vezCw8+3CVeE0lJTL5dbL3OP98Za0oAEBJcOxky8Riy/XcmfKZbw==
+          -----END PUBLIC KEY-----          
+        attestations:
+          - predicateType: https://slsa.dev/provenance/v0.2
+            conditions:
+              - all:
+                - key: "{{ builder.id }}"
+                  operator: Equals
+                  value: "tekton-chains"        
+                - key: "{{ recipe.type }}"
+                  operator: Equals
+                  value: "https://tekton.dev/attestations/chains@v1"
+....
+
+In all instances, dev teams can continuously evaluate their images/artifacts for potential policy violations during development, thereby proactively mitigating any security-related deployment issues. Incorporating secure defaults (Paved Roads) is, of course, very helpful in minimizing the likelihood that a security gate is triggered.
+
+== Conclusion
+
+A security gate can be an important mechanism to ensure that security has been sufficiently addressed during the development process and to prevent insecure artifacts from being deployed. However, there are various ways to implement it, and not every approach suits every organization or development methodology. Some methods may be entirely inefficient and only slow down dev teams. It is therefore crucial to be really careful when designing and implementing a gate.
+
+Typically, the earlier a gate is implemented within the development process (e.g., to verify completion of SDLC security practices), the less problematic it tends to be. Especially for security gates enforced in build or delivery pipelines (or respective process steps), the following quality criteria ** should be considered:
+
+. *Risk-Based:* Tests should be focused only on real security concerns and generate as little noise as possible.
+. *Fast & Accurate*: Tests should be accurate, automated, and quick.
+. *Transparent Policy:* Tests should be guided by a transparent policy that teams can continually evaluate, preferably locally and through automated means like CLI or build pipelines. Security requirements need to be known and planable for the teams.
+
+Handling vulnerabilities (e.g. of AST tools ) with deployment gates can be especially challenging, particularly in CI/CD scenarios where vulnerabilities are often already in production when identified. At least you should consider some for the *possibility of exceptions and/or re-evaluation*. A common practice here is the use of vulnerability remediation SLAs and perhaps only block deployments of updated artifacts with SLA violations, ideally in combination with some form of approval workflow. Gates that can enforce security on new code/artifacts, or security-relevant settings and attestations for images and other types of artifacts can typically be implemented more strictly.
+
+Especially in later stages of development, *gates should be designed to remain mostly inactive*, serving as a safety net that intervenes only when necessary. Activating these gates should be minimized through strategies such as promoting transparency (enhancing developer awareness), integrating automated checks throughout the development process, and adopting secure default principles and approaches.
+
+Based on my personal experience, the mere existence of a security gate often ensures that relevant security requirements are more aware to relevant stakeholders (dev teams, product owners, etc.) and, consequently, taken much more seriously during development. To smoothly introduce a new gate, I recommend beginning with a dry run. During this initial phase, the gate should not be in block mode, allowing developers to familiarize themselves with it.
+
+_This blog post was originally published on March 22 and revised on November 24, 2023._

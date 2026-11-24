@@ -1,0 +1,126 @@
+= Why Security Champions Are Not the Silver Bullet
+:page-date: 2023-09-13
+:page-categories: Secure Software Development
+:page-tags: Agile Security, SSDLC, Security Champions, Threat Modeling
+:description: Security Champions have been a proven and popular security practice over the years. We’ve learned from initiatives at companies with an AppSec leadership reputation like Netflix, AWS, Adobe, or…
+
+Security Champions have been a proven and popular security practice over the years. We’ve learned from initiatives at companies with an AppSec leadership reputation like Netflix, AWS, Adobe, or Salesforce about the remarkable advantages of integrating this role within development teams. This approach is endorsed by industry standards and organizations like http://safecode.org/wp-content/uploads/2019/02/Security-Champions-2019-.pdf)[SafeCode], https://owaspsamm.org/model/governance/education-and-guidance/stream-b/[OWASP SAMM], and https://www.synopsys.com/software-integrity/software-security-services/bsimm-maturity-model.html[BSIMM]. Consequently, it comes as no surprise that a multitude of organizations have either initiated their own Security Champion programs or have imminent plans to do so.
+
+For a long time, I was advocating for this concept as something that every organization should implement. After being part of lots of Security Champion programs myself and seeing how they played out in other places, I've come to realize that this role doesn't fit every organization in the same way.
+
+Having participated in numerous Security Champion initiatives myself and observed the outcome of many other initiatives I have come to believe that this role does not work for every organization in the same way though. Since there isn't much out there exploring this role from different angles, I thought I'd share my own experiences in this post. I will also discuss other important approaches in this context that, in my opinion, don't get the recognition they deserve.
+
+But before we dive deeper, let's first unravel the essence of the Security Champion concept.
+
+== What are Security Champions?
+
+Unfortunately, there is no official, universally recognized definition for the term 'Security Champion,' or at least none that I'm aware of. Furthermore, the nomenclature itself varies widely, with alternative titles like Guardians, Advocates, or Ninjas.
+
+So let's delve into the core concept underpinning this role.
+
+The principal rationale behind the need for Security Champions stems from the 'shift left' paradigm, which places a substantial burden of new security responsibilities, tools, and practices (including threat modeling) upon developers. The central query isn't solely about empowering teams; it fundamentally revolves around how to effectively scale AppSec.
+
+The challenge lies in the fact that security professionals capable of supporting development teams, typically part of AppSec or ProdSec (Product Security) teams, are usually rare A telling statistic from the https://www.synopsys.com/software-integrity/software-security-services/bsimm-maturity-model.html[BSIMM 12] report reveals that, among participating companies, there was an average ratio of 1 security professional for every 135 developers. Since the BSIMM companies are usually more mature than the average, I would expect this ratio is often even lower.
+
+The main idea behind Security Champions is therefore to address this challenge by educating one or two developers from each team through specialized training, workshops, and regular participation in security community gatherings, such as Security https://scaledagileframework.com/communities-of-practice/[Communities of Practice] or Security Guilds. These trained individuals then allocate a portion of their weekly hours to:
+
+. Enabling their team members (http://safecode.org/wp-content/uploads/2019/02/Security-Champions-2019-.pdf)[SafeCode]).
+. Acting as a guardian of good security practices (https://maturitymodel.security.aws.dev/en/3.-efficient/security-champions/[AWS]) of their team.
+. Executing specific security practices (e.g. vulnerability management, threat modeling).
+. Serving as a voice of their team (https://wiki.mozilla.org/Security/Champions[Mozilla]) for security matters or single point of contact, or SPoC, on behalf of their team.
+
+It's important to note that the precise role definition may differ from one company to another. The following diagram provides an illustrative representation of the common underlying concept of security organizations incorporating Security Champions alongside dedicated AppSec / ProdSec teams that can also be found in the https://github.com/edgeroute/security-champion-framework[Security Champion Framework]:
+
+image::2023/09/scorg.png[image]
+
+Many companies saw great results when they introduced Security Champions this way. For example, at AWS, their https://aws.amazon.com/de/blogs/security/how-aws-built-the-security-guardians-program-a-mechanism-to-distribute-security-ownership/[security guardian program] led to a significant decrease in high/medium-level security issues and saved security engineers a lot of time during review.
+
+== Not Every Initiative Is a Success
+
+The idea of having a Security Champion certainly seems quite logical, doesn't it? So why do Security Champion initiatives not consistently result in the same level of success as those highlighted previously? In essence, the obvious explanation lies in the fact that not all companies are the same, and the effectiveness of introducing such a role depends on specific prerequisites that many appear to overlook. Let's explore several important factors:
+
+=== Factor 1: The Employment Model
+
+The main idea behind a Security Champion is to train specific developers who can then share that knowledge with their teams. They act as a form of multiplicator for AppSec knowledge if you like. Usually this is archived by sending those developers to security training, conferences, etc. let them allow It's not surprising that there are various https://www.practical-devsecops.com/certified-security-champion/[training and certification options] designed specifically for Security Champions.
+
+This is a great idea, but it comes with an important limitation: It tends to work well only for internal developers.
+
+This is the type of employment that you will usually find at tech companies like Amazon, Netflix, and similar firms. In other business lines, however, we have usually way more external developers, like contractors or developers from other companies. However, in other industry sectors, there is often a higher reliance on external developers, such as contractors or professionals from external companies. In fact, many projects I engage in primarily involve external developers, and it's often these external developers who are designated as Security Champions. The challenge lies in the fact that companies are often unwilling to cover the costs of expensive training for external developers. Instead, they expect these developers (or their respective companies) to fund their own education. Consequently, the entire training concept becomes impractical in such scenarios.
+
+=== Factor 2: The Lack of Security Culture
+
+Another critical aspect that these mentioned companies likely don't face is the absence of a security culture. This often results in the fact that security is *not considered a business priority* or business enabler - at least not with all consequences. Consequently, when developers are chosen to be Security Champions, they often end up being those with available bandwidth at the moment—typically junior team members with limited influence within their teams.
+
+It appears that many organizations encounter comparable challenges, and the developers who 'volunteer' for the Security Champion role frequently find themselves feeling frustrated or disengaged. Chris Romeo recently surveyed his LinkedIn followers for examples of dysfunctional Security Champions, yielding a substantial list of descriptors such as 'volun-told champion,' 'victim champion,' or 'isolated champion.' These match my own experiences quite well, as I've often met with Security Champions who were clearly forced into their roles and participated with visible reluctance. This cannot be the right approach.
+
+In the absence of a robust security culture and teams that embrace the benefits of appointing Security Champions, you risk achieving precisely the opposite of your original intent. Rather than scaling AppSec, you inadvertently introduce bottlenecks. Instead of fostering team cohesion and open communication, you inadvertently create isolated information silos.
+
+=== Factor 3: The Reluctance to Establish a New Role
+
+The final aspect, while perhaps less critical but still noteworthy, is the resistance many organizations exhibit when it comes to introducing a new organizational role. This resistance can stem from the difficulty of fitting such a role into their existing agile frameworks, like https://scaledagileframework.com/[SAFe], or within their established organizational role definitions. In such cases, the concept of a 'community role' is occasionally employed, albeit with limited practical implications.
+
+The https://www.devopsagileskills.org/dasa-devops-principles/[4th DANA DevOps Principle] states that 'in product organizations with vertically integrated, self-sufficient teams, these teams must maintain complete autonomy throughout the entire lifecycle.' Consequently, when we insist that teams appoint a role like a Security Champion, it can appear contradictory to this principle, especially in terms of role responsibilities rather than training. This is one reason for the hesitation that I've observed in adopting this role.
+
+== There's More than Security Champions
+
+Based on my personal experience, the main challenge in getting development teams to embrace security isn't necessarily due to the absence of a specific role or training. Instead, it often revolves around conflicting priorities and the over-complexity of many security requirements. In addressing these issues, I've discovered certain approaches to be particularly effective, regardless of whether your organization utilizes Security Champions or not.
+
+=== Simplify Security
+
+Security tasks can be quite time-consuming, mainly because they tend to be overly complicated. So, a smart way to go about it is to make security as straightforward as we can. We can do this by doing two things: *(1) making security part of the regular processes and (2) using secure defaults* *whenever we can*.
+
+We can do this by making smart security choices when we design systems and choose the technology to use. It means having guides or templates that already have security built-in, creating a central hub for security functions, making sure security is the default in things like how we set up networks and cloud systems and automating or centralizing security tasks like authentication, authorization, and encryption.
+
+https://systemweakness.com/security-like-netflix-1dcde455e8cd[Paved Roads] are a very interesting and flexible concept in this scenario that was made popular by Netflix. The basic idea behind Paved Roads is to provide developers with a smooth and secure path to develop and deploy their code. As we'll dive into, Paved Roads act as a strong motivator because they make the secure path so attractive to teams that it becomes their go-to choice.
+
+Another important aspect is the use of security tools. These tools tend to produce a lot of noise (aka false alarms) which can thereby add unnecessary work for developers. So, my suggestion is to be selective when including security tools in your Continuous Integration (CI) systems. *Focus on smart testing, not testing everything possible.* Avoid tools or settings that create too much noise because it can lead to teams feeling frustrated with security tools. Centralize the integration of scanning tools so that not every team has to set them up in their pipeline individually. Also, consider using tools like https://www.defectdojo.org/[DefectDojo] to gather and manage findings. This way, your development teams don't have to deal with ten different UIs.
+
+In simple terms, the easier we make security without compromising security, the less teams must rely on security experts for help.
+
+=== Establish a Service-Oriented AppSec or ProdSec Team
+
+Security is undeniably complex and whether or not you have Security Champions, it's likely you'll require a dedicated team to bolster your development efforts. Historically, these teams were often referred to as AppSec teams. However, in a product-centric organizational structure, it's prudent to contemplate establishing a Product Security (ProdSec) team instead. This ProdSec team would shoulder the responsibility of assisting your product teams with the security considerations spanning the entire technology stack they engage with.
+
+The *primary focus of these teams should revolve around aiding development teams* in risk identification and the implementation of security requirements within their codebase, development pipelines, and beyond. Additionally, this team's responsibility is also to educate and empower teams in terms of security. This, however, should not be limited to traditional classroom training but encompasses various forms like targeted presentations, Communities of Practice (CoPs), Product Owner (PO) meetings, lessons-learned workshops, and more. Finally, AppSec and ProdSec teams should also provide general security guidance (e.g. in the form of Wiki pages, playbooks, etc.) and self-service tooling.
+
+However, it's worth noting that these teams can *sometimes struggle to engage effectively* with development teams, resulting in less-than-optimal efficiency. Some organizations resort to formal processes or ticketing systems for dev teams to request assistance, inadvertently complicating collaboration.
+
+Instead, I advocate for a more *service or customer-oriented mindset* within these teams, actively fostering connections with developers. A practical approach is to assign dedicated security engineers to specific projects, Agile Release Trains (ARTs), solutions, teams, etc. and enable them to become integral parts of these organizational units, connect with developers, and establish a deep understanding of the business context. Rather than waiting for developers to seek assistance, these teams should proactively engage with them. Conducting security kick-off sessions with new teams is especially beneficial, as they often require the most support during their initial phases.
+
+=== Let Teams Own Their Security
+
+I've observed that the term "https://devopedia.org/shift-left[Shift Left]" is often misunderstood by security managers as "Shift Away", implying that AppSec is solely or primarily the responsibility of development teams. This perception aligns with the notion that establishing Security Champions reinforces.
+
+However, this perspective is fundamentally flawed. In reality, https://www.darkreading.com/cloud-security/aws/aws-werner-vogels-security-is-everyones-job/a/d-id/744744[security is a collective responsibility]. An essential starting point is to lay out who's responsible for what in terms of security. The important aspect here is that the whole product team must "own" the security of its product and artifacts, and they should also feel accountable for them, at least to a certain extent. Similarly, the platform team bears responsibility for the security of the platform itself, and so forth. As we'll explore in the following discussion, this notion of ownership also includes a degree of decision-making authority.
+
+Determining ownership of security responsibilities within an organization is more important than listing out specific security rules because it makes people responsible, ensures that security fits with what each team does, lets teams decide what's best for their situation, encourages a security-minded culture, allows for flexibility when new threats pop up, streamlines security tasks, and boosts communication.
+
+=== Give Teams (Certain) Security Autonomy
+
+Ownership involves a key element: a certain decision-making autonomy, as emphasized by the fourth DANA DevOps principle. This autonomy is truly valuable as it empowers teams to find and implement security measures that work best for them and often increases their overall motivation for security as well. Nevertheless, team autonomy here may of course also raise concerns about new security risks introduced by these teams.
+
+So, how can we extend this principle to encompass security? The important factor here is to identify areas where we can grant teams some decision-making authority *within defined boundaries* and without increasing our security posture. This concept is commonly referred to as https://www.techtarget.com/searchitoperations/tip/Putting-up-DevOps-guardrails-what-does-that-mean[Guard Rails]. It frequently finds application in many cloud computing where teams are granted a degree of autonomy through Service Control Policies (SCPs). For instance, in terms of defining own IAM policies or setting up cloud environments within defined limits. Another common scenario involves the automatic approval of firewall port openings that are associated with low-security risks.
+
+We can also extend this concept to encompass security requirements more broadly by granting teams the autonomy to determine how they implement specific requirements. For instance, we offer teams various alternatives for SAST, SCA, or container security tools. As long as teams import their findings into our DefectDojo and manage them before an artifact goes into production, they have the freedom to choose which tool to use and how they want to utilize it. This same approach can be applied to vulnerability management, threat modeling, and so on.
+
+To effectively scale this approach, it's essential to provide *self-service* options and mechanisms for automatically assessing team compliance with defined acceptance criteria, e.g. by utilizing https://securityscorecards.dev/[security scorecards]
+
+I'm convinced that adapting such an objective-based approach generally results in a higher level of acceptance of security ownership among development teams. Nevertheless, as I've previously noted, this approach does demand a certain level of maturity within development teams and might not be suitable for every organization or every type of requirement
+
+=== Provide Incentives
+
+In my opinion, one of the most effective strategies is the use of incentives. While it's the responsibility of management to establish overarching security priorities, it frequently boils down to a few bullet points on slides. It's equally important to consider how we can motivate and inspire our development teams to take a more proactive approach to security.
+
+There are basically two approaches to this:
+
+*Discouraging Negative Behavior:* A highly effective strategy involves preventing developers from going live when specific security prerequisites are not met, such as the presence of unmanaged critical vulnerabilities within an artifact. Admittedly, this approach involves what can be seen as security gates, a concept that some people vehemently oppose. However, as I've detailed in my post xref:2023/11/24/how-security-gates-can-work-efficiently-even-with-devops.adoc[Implementing Security Gates in an Agile World] it is entirely feasible to deploy such gates in a manner that does not impede regular development processes. Instead, they serve as a means to ensure security compliance by focusing on key quality criteria like transparency, risk relevance, and operational speed
+
+*Promoting Positive Behavior:* Another avenue for incentivization adopts a more constructive approach. An illustrative example of this approach is the implementation of paved roads, as previously discussed. They not only provide a secure method to go live but also the most accessible one for teams. Consequently, teams are likely to opt for this option. Additionally, we can introduce incentives for teams that attain a specific level of maturity, granting them greater autonomy in security-related decision-making, approvals, privileges, and adherence to guardrails (as mentioned earlier). When a team demonstrates a sufficient level of security maturity, we can consider relaxing certain security requirements, ultimately enabling them to expedite their deployment processes.
+
+== Conclusions
+
+Utilizing Security Champions can be an invaluable strategy for scaling AppSec within a company. However, it's crucial to recognize that their effectiveness can vary from one organization to another. Without the possibility to provide champions with proper training, or a lack of security culture and priorities, this approach can inadvertently create bottlenecks and communication silos, hindering team enablement instead of facilitating it. *Appointing someone as a Security Champion alone doesn't guarantee automatic improvements.*
+
+Personally, I find that there is too much focus on this role as if this is the one thing we can and should do to scale AppSec in an organization. *In fact, there can be good reasons to not establish Security Champions* and to focus more on finding ways to support, motivate, and empower development teams as a whole. For example, we can emphasize team ownership and responsibilities, and grant dev teams a certain autonomy to make their own security decisions within boundaries to shape security requirements to their needs. These steps can greatly enhance our AppSec efforts, whether or not we have Security Champions in place. If you don't have a functioning Security Champion organization, I would also create a non-exclusive security community for everyone interested and perhaps find a core group of motivated developers there who can help you work on security topics.
+
+While *AppSec and ProdSec teams play an important role here*, evaluating their effectiveness in supporting and enabling teams should go beyond simply looking at the ratio of developers to security professionals. There are numerous ways to enhance the efficiency of these teams, including dedicated focus, shifting responsibilities, and, of course, streamlining security processes for development teams.

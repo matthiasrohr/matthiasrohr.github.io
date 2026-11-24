@@ -1,0 +1,103 @@
+= Why the Term IAST is Misleading and Confusing to Many
+:page-date: 2021-08-20
+:page-categories: Security Test Automation
+:page-tags: DAST, IAST, SAST, Security Testing
+:description: As someone who has been working with IAST long before it was actually called this way - Fortify released its Program Trace Analyzer (PTA) approximately in the year 2008 – I have followed the…
+
+As someone who has been working with IAST long before it was actually called this way - Fortify released its Program Trace Analyzer (PTA) approximately in the year 2008 – I have followed the evolution of this technology closely and xref:2015/11/26/the-emerge-of-iast.adoc[posted a couple of times on it as well].
+
+For me, IAST was always not only a fascinating technology but also an approach that makes so much sense in a modern development world in which automation and quick release times are vital.
+
+Over the last couple of years, IAST has received increasing market attention with more and more vendors offering new solutions in this field on the one side and an increasing number of companies integrating them in their development processes on the other.
+
+However, I do frequently notice that there is still a lot of confusion and misinformation on IAST, especially when it is compared to the other AST tools, DAST and SAST. And there are good reasons for that. So I decided to write this post to hopefully clarify a few things about this technology and to give some recommendations on how to use it.
+
+== AST Terms Recap
+
+Since a lot of terms are discussed here, it makes sense to first look at some definitions for Application Security Testing (AST) tools that I've taken from https://owaspsamm.org/model/verification/security-testing/stream-a/[OWASP SAMM 2]:
+
+* *SAST* (“Static AST”): A tool that performs AST statically, by inspecting an application’s source code without running it.
+* *DAST* (“Dynamic AST”): A tool that performs AST dynamically by simply observing the application’s behavior in response to various input conditions.
+* *IAST* (“Interactive AST”): A tool that combines the strengths of both approaches by dynamically testing automatically instrumented applications.
+
+All these terms were originally defined by Gartner. The problem is that they were not invented at the same time. And it seems that Gartner prefers to introduce new tool categories when a definition does not fit anymore instead of just changing it.
+
+In addition to these tools, we also need to mention *SCA* (Software Composition Analysis) here. Although usually not considered AST, with SCA we describe tools (or capabilities) that do not scan custom code like the three above but open-source 3^rd^ party components for known vulnerabilities.
+
+== Misleading
+
+First of all, I find the term “interactive” quite misleading. Interestingly, our definition above does not use this word at all. So what does this actually mean?
+
+I good definition that I've found is that IAST tools are “continuously analyzing all application interactions initiated by manual tests, automated tests, or a combination of both to identify vulnerabilities in real-time” (https://www.synopsys.com/glossary/what-is-iast.html[Synopsis]).
+
+This definition is quite fitting for most of what an IAST tool is doing: analyzing interactions. Or let me put it this way: Analyzing interactions for security issues would be the minimum you should expect here. However, what many don't know, *modern IAST solutions can now do more than just analyze interactions*:
+
+* They can identify vulnerabilities in 3rd party components
+* They can identify various configuration or deployment flaws
+* They can identify insecure algorithms & APIs used
+* They can identify existing routes & endpoints
+
+I expect that we will see (at least leading) IAST solutions supporting even more of these static scanning capabilities in the future. Analyzing interactions may therefore be the central aspect of an IAST tool, but it is certainly not all IAST can do.
+
+== Confusing
+
+My main problem with the term IAST is another thought: It confuses. Some best practices like https://www.microsoft.com/en-us/securityengineering/sdl/practices[Microsoft SDL practices] or SAFECode's https://safecode.org/wp-content/uploads/2018/03/SAFECode_Fundamental_Practices_for_Secure_Software_Development_March_2018.pdf[Fundamental Practices for Secure Software Development] only refer to SAST and DAST as SDLC practices but not to IAST. So it’s not surprising, that I’m often asked by customers what kind of AppSec tooling is now really recommended to use? All three or just one or two?
+
+First of all, it's important to understand, that IAST can be seen as a hybrid approach of SAST and DAST and that is what makes it so complicated to give clear advice here. So it makes sense to analyze if we could perhaps replace one of these tools with IAST.
+
+An obvious idea would replace SAST with IAST. Both are actually performing some form of security code analysis, SAST in a static, IAST in a dynamic way. This is why I often call IAST a dynamic code-scanning tool. *In practice, it is the combination of SAST and IAST that usually makes sense* though.
+
+There are a couple of reasons for that: For instance to reach a better scan coverage: SAST just requires the source or byte code that it can scan as long as it is supported by the relevant technology (programming language or framework - and Enterprise SAST solutions do usually cover a lot of them. IAST on the other hand has some limitations:
+
+* *Can only scan server-side code*: For instance, mobile apps, JavaScript, or rich clients are not supported (yet).
+* *Supports fewer* technologies than SAST: For instance, certain server-side technologies like C/C++, Cobol, ABAP, or Ruby are not supported (yet) by any IAST tool known to me (although the number of technologies supported by IAST tools has rapidly increased over the last years).
+* *Requires integration into runtime environment & sufficient test coverage*: For instance, you would not be able to scan just some branch in a Git repo with an IAST tool.
+
+Also, the combination of the static and dynamic scan context makes a lot of sense from a scan quality perspective. This is why many major vendors are working on integrating both technologies into their solutions. Such integration could potentially improve both scan coverage and quality drastically - basically "SAST on steroids" or "IAST on *steroids"*.
+
+This looks differently for DAST: Based on my professional experience, *you usually don’t need DAST if you have an application covered with IAST*. Both perform dynamic application assessments. Yes, both. DAST uses a black box and IAST is based on an agent-based white-box approach. Look at our definition from above.
+
+So both are actually dynamic AST but only one is called DAST due to historical reasons. Well, that’s confusing, right?!
+
+A few advantages of DAST do exist solutions:
+
+* *Technology agnostic*: IAST tools must support the execution environment and languages you want to test
+* *No integration needed*: DAST tools do not require access to the execution environment (e.g. test server)
+* *Can scan full websites*: DAST can scan a full website with all integrations (not just the execution context).
+* *Fuzzing*: DAST basically always provides some sort of fuzzing capability, both implicitly or explicitly, that can help provide unexpected input and stress test the input validation controls of an application. However, fuzzing is not that easy to perform against a complex web application. If you want to automate such tests, I usually recommend doing this via custom integration tests or the use of https://safecode.org/focus-on-fuzzing-fuzzing-within-the-sdlc/[fuzzing frameworks] instead.
+* *Can scan client-side code*: IAST only allows server-side code scans. However, I find the capabilities of most SAST and DAST tools not really convincing in this field at the moment as well.
+* *Licensing Costs*: Usually cheaper or free (e.g. OWASP ZAP).
+
+However, if you've managed to cover an application with IAST, these advantages are drastically reduced.
+
+== Recommendations
+
+So let's talk a bit about what a recommendation here could look like. From my experience, here is my general recommendation:
+
+. *Perform automated static security scans* with SAST to cover all code.
+. *Perform automated dynamic security scans* with IAST (for enterprise web apps & APIs) or DAST (for simple web apps or where no access to the runtime environment exists. Depending on the tool and technologies scanned, you may be able to replace some SAST scans with IAST in some cases.
+. *Scan your 3rd party automatically dependencies* with SCA, if not already integrated into your IAST (or SAST) solution.
+
+Also useful is the additional use of website security scanners (or web vulnerability scanners), often provided by SaaS services like https://sucuri.net/[Sucuri], https://tenable.io/[tennable.io], https://www.immuniweb.com/[ImmuniWeb], https://nimbusec.com/[Nimbusec], or (with fewer features but free) Mozilla Observer that constantly your external websites for vulnerabilities such as TLS errors or proper set security headers. Also, tools like https://wpscan.com/wordpress-security-scanner[WPScan] are really helpful to check your WordPress instances.
+
+And of course, none of these tools can replace your own functional security tests (e.g. to test access controls, user registration/login, or other security-relevant business logic). Also, as mentioned, some form of *fuzz testing* could be automated using custom security tests if desired.
+
+== Proposals for Alternate Terms
+
+The term IAST makes actually not much sense from a technical point of view. IAST is practically just another form of dynamic AST. The term DAST is limited due to historical, not technical reasons.
+
+I think it would be therefore helpful to treat DAST and IAST as different forms of dynamic AST:
+
+[width="100%",cols="20%,20%,20%,20%,20%",]
+|===
+|*Alternate Term* |*Aka* |*Mode* |*Approach* |*Description*
+|*Standalone dynamic AST* |DAST, +
+Web +
+Security Scanner |Active Only |Black Box |External (active) Scanner Component
+|*Agent-enhanced dynamic AST* |DAST + IAST capability, +
+IAST Light, Active IAST |Active + Passive |Black Box  + White Box |Agent-based technology may be used, but an external (active) scanner component is required.
+|*Agent-based dynamic AST* |IAST, +
+Full IAST, Passive IAST |Full Passive |White Box |Agent-based technology that does not require an external (active) scanner component.
+|===
+
+By using these alternate terms we are now able to define clear recommendations that cover all current and future variants of AST by just differentiating between static and dynamic forms.

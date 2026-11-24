@@ -1,0 +1,13 @@
+{
+  "name": "pragmatic-application-security",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static blog built with Antora",
+  "scripts": {
+    "build": "antora antora-playbook.yml"
+  },
+  "devDependencies": {
+    "@antora/cli": "3.2.3",
+    "@antora/site-generator": "3.2.3"
+  }
+}

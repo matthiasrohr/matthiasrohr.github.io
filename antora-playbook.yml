@@ -1,0 +1,20 @@
+site:
+  title: Pragmatic Application Security
+  url: https://matthiasrohr.de
+  keys:
+    tagline: Thoughts on Secure Software Development
+content:
+  sources:
+  - url: .
+    start_path: content
+    branches: HEAD
+ui:
+  bundle:
+    url: ./ui
+urls:
+  html_extension_style: indexify
+antora:
+  extensions:
+  - ./extensions/blog.js
+output:
+  dir: ./build/site

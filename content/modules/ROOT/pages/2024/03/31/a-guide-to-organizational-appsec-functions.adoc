@@ -1,0 +1,181 @@
+= A Guide to Organizational AppSec Functions
+:page-date: 2024-03-31
+:page-categories: Secure Software Development
+:page-tags: SSDLC, Security Champions, Security Organization
+:description: With OWASP SAMM, BSIMM, and NIST SSDF, there have been excellent resources for some time that provide a basis for evaluating and improving application security within an organization. However, these…
+
+With https://owaspsamm.org/[OWASP SAMM], https://www.synopsys.com/software-integrity/software-security-services/bsimm-maturity-model.html[BSIMM], and https://csrc.nist.gov/projects/ssdf[NIST SSDF], there have been excellent resources for some time that provide a basis for evaluating and improving application security within an organization. However, these sources often treat structural aspects, such as roles within an organization and their interdependencies, rather generally. For this reason, I want to share my personal view on that that is based on organizational structures that I've observed in many organizations, both in a good and in a bad way.
+
+Before diving in, a brief note on terminology: The realm of application security is rich with related terms, including Software Security, Product Security (ProdSec), Security Engineering (SecEng), DevSecOps, and occasionally Cloud Native Application Security (CNAS). distinctions among these terms are relevant and add clarity, I will make them explicit. In all other contexts, application security or "AppSec" should be regarded as a broad, encompassing term for this discussion. The same preference applies to the terms "dev", "development", "agile" or "product" teams. I will use the first two terms here if no further distinction is relevant.
+
+But let's get started.
+
+== Overview
+
+Organizational functions, including roles and responsibilities, establish the foundation upon which application security can be successfully implemented and the respective practices can be applied.
+
+Some companies still view AppSec exclusively as a governance function, engaging with dev teams only when, for instance, inquiring about their https://owasp.org/www-project-top-ten/[OWASP Top 10] compliance. Others view it as a concern that is fully delegated to dev teams or as an internal service provided to them. I sometimes hear the term 'customers' in this context, which I find really problematic. It implies that teams can decide which security measures or requirements they'd like to implement, treating AppSec as an optional service rather than an integral part of the development process.
+
+I, however, strongly believe that for an organization to be successful at AppSec, it should not just focus on one single strategy but instead address the three dimensions that we see in the following model. Each of them features three tiers of relevant functions, categorized by their level of integration.
+
+[cols=",,",]
+|===
+|*1. Team-Specific AppSec Functions* |*2. AppSec Services & Support Functions* |*3. AppSec Governance, Architecture & Leadership Functions*
+|_Focus: Secure Development & Operation_ |_Focus: Provide Shared Services & Guidance to Teams_ |_Focus: Compliance & Risk Mgmt, Policies & Standards, Strategy, Reporting, etc._
+|1.1 Team Security Ownership |2.1 Dedicated AppSec Role(s) |3.1 AppSec Governance Function
+|1.2 Security Champions |2.2 Dedicated AppSec Team(s) and Services |3.2 (Central) AppSec Architecture Function
+|1.3 Dedicated Security Engineers |2.3 Internal AppSec Products |3.3 AppSec Leadership Function
+|===
+
+Generally, these dimensions and functions should ideally be assigned to a dedicated person or organizational unit to prevent conflicts of interest and improve focus, such as supporting dev teams. However, it's not strictly necessary. Also, note that it does not imply that the person performs it full-time. Thereby this model can also be applied in smaller organizations where often a single individual is responsible for both the second and third dimensions.
+
+It's important to understand that this model aims to provide general guidance rather than detailing every conceivable role. As such, there could be roles that are beneficial for certain organizations which are not specifically mentioned in it.
+
+Furthermore, the extent of integration of each dimension doesn't directly correlate with an organization's maturity level in that particular area. The model rather reflects the structures an organization has put in place to effectively adapt AppSec practices. Nevertheless, it's possible for a specific organization or team to effectively implement these practices without having all the outlined structures implemented.
+
+== Dimension 1: Team-Specific AppSec Functions
+
+Ensuring the security of a product, application, or service is primarily the responsibility of the respective development team. Therefore, it makes sense to integrate AppSec functions directly within those teams.
+
+=== 1.1 Team Security Ownership
+
+The first function is not a dedicated role, but the responsibility for security shared by the entire dev team. Although this might appear obvious, in practice, I often meet teams and product owners who are not conscious of the fact that ensuring the security of their products is within their responsibility. Such ownership would include that teams define security requirements in their Definition of Dones (DoDs), or acceptance criteria, that they actively push security to reduce their security dept, are actively interested in conducting threat modeling and similar assessments to identify potential threats to their applications and include security stories in their sprint planning.
+
+I’ve also often observed that dev teams perceive security measures primarily as something that slows them down. This attitude is, of course, often closely related to their Product Owners (POs) or Project Managers (PMs) not valuing security work sufficiently, especially when it could lead to business stories requiring more time to complete.
+
+=== 1.2 Security Champions
+
+Perhaps the role that has been most extensively discussed in the field is that of the Security Champion (SC), also known as Security Guardian, Security Ninja, Security Liaison, or Security Advocate. The core concept is simple and compelling: Each dev team selects one or two of its members, usually developers, who undergo some security training and then dedicate some of their time to work on AppSec topics within their teams. They act as a single point of contact (SPoC) for security matters and actively participate in the security community of practice (CoP) or similar formats. A related concept that is used in this context is https://github.com/OWASP/owasp-summit-2017/blob/master/Working-Sessions/Agile-AppSec/Security-Guild-vs-Security-Champions.md[Security Guild] coined by Spotify, which, from my experience, is usually more formal than a CoP.
+
+image::2024/03/AppSec-Role-1-3.png[image]
+
+As we'll find out later, the "other security functions" depicted in this diagram can represent either a central or project-specific AppSec engineer, architect, or team if such roles exist.
+
+This concept has gained widespread acceptance and is referenced by various standards, including https://owaspsamm.org/model/governance/education-and-guidance/stream-b/[OWASP SAMM] https://csrc.nist.gov/projects/ssdf[and SSDF]. In general, I'm a strong advocate for this concept because it excellently facilitates the scaling of AppSec within an organization and aids teams in exercising their security ownership.
+
+However, as I outlined in my recent post, Why Security Champions Are Not the Silver Bullet, this concept isn't universally applicable to every organization or team in the same manner. Without appropriate training and recognition for their efforts, champions can quickly become counterproductive and create bottlenecks. This is especially true in scenarios where development teams largely consist of external contractors, a common situation, especially in non-tech companies. Introducing this concept presents challenges, as it may be difficult to provide sufficient training to these contractors. This could explain why this role is mentioned at a later stage in the https://maturitymodel.security.aws.dev/en/3.-efficient/security-champions/[AWS Security Maturity Model].
+
+Additional information about security champions can be found in the https://github.com/edgeroute/security-champion-framework[Security Champion Framework], the https://owasp.org/www-project-security-champions-guidebook/[Security Champion Guidebook], and the SAFECode publication https://safecode.org/wp-content/uploads/2019/02/Security-Champions-2019-.pdf[Software Security Takes a Champion].
+
+=== 1.3 Dedicated Security Engineers
+
+The ultimate phase of team integration involves a dedicated, full-time security role within a team. Michael Burch provides a very comprehensive and detailed description of what he defines as a Security Software Engineer (SSE) in his BrightTALK presentation https://www.brighttalk.com/webcast/20128/609569?utm_source=brighttalk-portal&utm_medium=web&utm_campaign=topic&utm_content=on-demand[AppSec Redefined: A New Way Forward]. It's important to note that this role differs from the security engineering role outlined in section 2.1. Here, the role is primarily that of a software engineer, yet with a strong security skill set.
+
+To me, this role is not necessarily one that is limited to software security. For example, we could assign dedicated security engineers to a system team where they are responsible for securing the platform and implementing the security pipeline. Additionally, for teams developing a product with high-security requirements, like a user (login) product, it might be beneficial to have such a dedicated security role within their team as well. However, for many other teams, this may not be necessary, especially if numerous security aspects are managed centrally, such as within the platform.
+
+== Dimension 2: AppSec Services & Support Functions
+
+In the next dimension, I will detail organizational functions that I primarily view as service or support roles for dev teams. Another term frequently used in this context is 'enabler,' as AppSec teams empower other teams to develop secure software and comply with security standards here.
+
+=== 2.1 Dedicated AppSec Role(s)
+
+One of the first steps for especially smaller organizations recognizing the need to invest in AppSec includes hiring a dedicated security engineering role to support their dev teams. The responsibilities of such a role can encompass implementing secure defaults, security policies, and guardrails for the dev teams, integrating security scanning tools, analyzing tool findings, conducting (small-scale) penetration tests, or conducting threat modeling sessions with dev teams.
+
+Common examples of such roles are:
+
+* Application Security Engineer
+* Software Security Engineer
+* Product Security Engineer
+* DevSecOps Engineer
+
+Additionally, there could be more specialized AppSec roles, such as security analysts, security testers (or pentesters), and trainers/coaches, which could complement the roles above.
+
+These job titles are often used interchangeably and all entail similar job responsibilities. The title 'Product Security' (ProdSec) engineer is gaining popularity and, in my opinion, is a good choice in a product-driven development environment. It explicitly indicates the responsibility of supporting dev teams with all relevant security aspects of their product, not just the application security layer. A software security role, on the other hand, might suggest a broader technical scope beyond mere applications, such as including embedded software. A nice overview of job descriptions in this field can be found on https://handbook.gitlab.com/handbook/security/product-security/[GitLab's Product Security page].
+
+In larger organizations, a dedicated security engineering role may be assigned directly to a specific project, solution, or other organizational unit. This approach can be highly effective, as these engineers often work closely with dev teams, actively participate in Scrum events, and usually gain a much deeper understanding of both the products being developed and their underlying environments. Their close collaboration and specialized knowledge enable them to address security concerns more effectively than a centralized security role could.
+
+*Tip:* Security engineering roles often face challenges integrating into development organizations. One reason for this is that they are not formally defined in common agile frameworks like https://scaledagileframework.com/[SAFe]. To address this, it's important to define a mandate that clearly outlines the specific scope, responsibilities, and authorities associated with the security engineering role. Once defined, seek formal approval from the relevant management function. This approach ensures that the role is officially recognized and properly integrated into the team's agile processes.
+
+=== 2.2 Dedicated AppSec Team(s) and Services
+
+The next step involves establishing dedicated AppSec teams to support and empower dev teams or projects. Examples of such units, which may have diverse responsibilities and focus areas, include:
+
+* AppSec Team
+* ProdSec Team
+* SecEng Team
+* Software Security Group (SSG)
+* Security Scouts
+* AppSec Coaches
+* Pentest Team
+
+In product-centric organizations, it's common to encounter a product security, or ProdSec, team, indicating that is responsible for all security concerns of their product teams. Large organizations with a certain maturity, sometimes sometimes establish a central AppSec team as a center of excellence. This team then provides specific security tooling & services (e.g. threat modeling, security testing, SAST onboarding/triaging/support, security training, or security assessments) and general guidance through an internal developer portal to projects and dev teams, as well as dedicated ProdSec teams or engineers in certain projects or organizational units. The transition from providing operational support as a single security engineer to managing a service catalog represents a significant advancement that can be archived by establishing a dedicated AppSec team. The following diagram illustrates this setup.
+
+image::2024/03/AppSec-Roles-2-9.png[image]
+
+Here, alongside a project-specific group, it can also be feasible to establish a Security CoP or Guild on an organization-wide basis, where, for instance, only security engineers would participate.
+
+Guy Podjarny discusses these and other types of AppSec teams in greater detail in his free book https://go.snyk.io/oreilly-cnas.html[Cloud Native Application Security]. It's definitely worth reading, especially for the Dev First approach he promotes in it. However, the alternative CNAS team that he suggests, indicating that this team covers the full cloud-native scope, is one I have never encountered and personally find less appealing.
+
+As highlighted previously, it is advisable to establish an official mandate for AppSec teams, similar to other specialized roles. This mandate should be clearly defined and then approved by the relevant management authority. This step ensures that AppSec teams have a clear authority, responsibilities, and scope.
+
+=== 2.3 Dedicated Internal AppSec Product(s)
+
+Utilizing https://www.kbp.media/internal-product-management/[internal products] can help companies better align service offerings with the needs of their internal dev teams. Below are some examples of AppSec products that I've often come across within companies:
+
+* DevSecOps
+* Secure Code Scanning
+* Security Engineering
+* Security Developer Portal
+* Security Assessments
+* Platform Security
+
+Note that these are just names, without formal specifications. As a result, the scope of a particular product can vary significantly across different organizations. Nonetheless, the primary function of AppSec products typically focuses on implementing a comprehensive security pipeline, including various security scanners and supply chain security tooling. Additionally, it might also encompass providing a specific AST scanning service (e.g., of a commercial SAST product), or developer support such as a developer portal.
+
+The benefit of creating products for these services lies in the ability to develop a strategy and roadmap for them and to appoint a PO responsible for their oversight. Moreover, dedicated team members, such as developers, can work exclusively on these products.
+
+Internal products can be part of an internal portfolio and usually receive more attention, acceptance, and budget and are closer aligned to the needs of developers and other users. They can also POs of such products to communicate on equal footing with POs from other products. While less frequent, it's possible to appoint a dedicated product manager (PM) responsible for the strategy and roadmap of (usually) several internal security products.
+
+Overall, developing products specifically for internal security services can be highly beneficial, significantly enhancing the developer experience (DevEx) of a given service and thereby increasing its acceptance, usage, and value.
+
+== Dimension 3: AppSec Governance, Architecture & Leadership Functions
+
+The third, and final, dimension encompasses all functions that lay the foundation for the organizational framework of application security, covering aspects such as policies, standards, risk management, education, strategy, and more. It's important to note that these functions may not be confined to a single department or division within an organization.
+
+=== 3.1 (Central) AppSec Governance Function
+
+Large organizations often begin to think about AppSec at an organizational level when faced with relevant compliance requirements, e.g. from standards like ISO 27001, PCI-DSS, or SSDF. Typically, the initial response involves crafting policies aimed at meeting these compliance needs, frequently by individuals with limited understanding of the field. As a result, many policies in this area are poorly written, thereby unnecessarily wasting resources of dev units that struggle to make sense of them.
+
+Therefore, it's crucial for organizations to gain at least a fundamental understanding and prioritization of application security within the InfoSec governance function. These functions should gain ownership for AppSec compliance and risk management. Usually, with input from technical experts, they would establish general AppSec policies, processes, and supplier requirements. This responsibility doesn't necessarily require a specific, dedicated position but someone with a high-level understanding of application security aspects who can collaborate with technical domain experts. In smaller organizations where resources are usually limited and no explicit InfoSec governance function exists, an existing single engineer or architect could potentially fulfill this role as well.
+
+A key benefit of having someone in this position is the clear assignment of ownership for AppSec and its associated risks, ensuring these areas are actively managed.
+
+In practice, filling such a role can be quite challenging, primarily because existing InfoSec employees may be hesitant to assume responsibilities in areas where they feel their expertise is lacking or that they find less interesting. One possible solution to this issue is to enhance the attractiveness of the role. Offering an elevated job title, along with opportunities for training and certification, can make the position more appealing and encourage employees to expand their skill sets into new areas.
+
+=== 3.2 (Central) AppSec Architecture Function
+
+Many organizations have a central architecture unit responsible for defining standards, reference architectures, and blueprints for dev teams. Naturally, a central architecture function should also encompass application security aspects. This function can be implemented centralized or spread out across the organization, with assignments to particular organizational units or projects. This allocation can be direct or through a central resource pool, allowing for flexibility in how application security expertise is deployed within the organization.
+
+Common examples of such roles are:
+
+* (Lead) Application/Software/Product Security Architect
+* Practice Lead Application/Software/Product Security Architecture
+
+The central aspect here is that an AppSec architect possesses both a technical focus and a deep technical understanding of application security. While such a function might offer guidance, conduct secure design reviews, or lead threat modeling sessions with dev teams as well, I see it as primarily fulfilling a defining or shaping function. AppSec architects are typically less hands-on and service-driven in comparison with a security engineer. Their responsibilities usually include the definition of architectural security concepts, standards, or blueprints. They should work closely with other architects, for example, in Communities of Practice (CoPs) and boards, assisting in the evaluation and approval of architectural decisions relevant to AppSec.
+
+=== 3.3 AppSec Leadership Function
+
+AppSec leadership typically involves guiding and overseeing the strategic planning, implementation, and continuous improvement of measures aiming at securing the lifecycle of business applications and the data they process. The primary focus is usually on integrating security practices into software development, often referred to as 'shifting left'.
+
+Common examples of such roles are:
+
+* Director/SVP Application/Software/Product Security/Security Engineering
+* Head of Application/Software/Product Security/Security Engineering
+* Application/Software/Product Security/Security Engineering Owner/Lead
+
+To me, the mere existence of such a leadership position is a clear indicator of an organization's strong commitment to and prioritization of application security. Typically, this position leads one or more AppSec teams and is responsible for standards/guidelines in this area, as well as several AppSec security services and products. However, from my perspective, the responsibility and authority of an AppSec leader role should go beyond mere product ownership, which is why it is categorized under dimension three.
+
+The diagram below illustrates an example implementation of an AppSec leadership role that we may find in a larger organization:
+
+image::2024/03/AppSec-Roles-2-16.png[image]
+
+Alternatively, the AppSec leader role could report to the Head of Cybersecurity or directly to the CTO, underscoring its significance for an organization. In practice, I often observe it assigned to a development lead, which I find problematic because it can result in a conflict of interest, especially concerning dimension three, and usually does not allow this role to cover the whole application lifecycle. I recently learned that at GitHub, the head of software engineering also takes on the role of head of security engineering, serving in both capacities. This is an intriguing model that could be particularly effective for tech companies with a security-focused culture.
+
+== Conclusion
+
+Every organization is unique in its nature, making it impossible to have one AppSec profile suitable for all.
+
+AppSec is often perceived by organizations solely as a service function. I understand that this makes it much easier to engage with dev teams. However, while user experience is indeed crucial, frequently overlooked, and typically underdeveloped. Ultimately, AppSec, like any other InfoSec discipline, is about risk management and compliance. We should not lose sight of this by solely concentrating on how to satisfy our users (developers). Instead, we should integrate this strategy with an awareness of risk and compliance.
+
+I therefore strongly believe that for an organization to succeed in AppSec, it should not just focus on one, but address all three dimensions, I've outlined. This doesn't mean that every organization must implement its own AppSec products, and leadership roles, or even assign security champions to every team. Rather, it means that an organization should thoughtfully consider each dimension, take ownership of it, and devise its own strategy for implementation that aligns with its structure, risk profile, and culture.
+
+This model is also applicable to small companies, where often only one person is responsible for both the second and third dimensions. While assigning these roles to different organizational units to prevent conflicts of interest is generally beneficial, it is not mandatory.

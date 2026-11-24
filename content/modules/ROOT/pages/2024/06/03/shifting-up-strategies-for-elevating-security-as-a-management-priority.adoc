@@ -1,0 +1,128 @@
+= Shift-Up Strategies for Elevating Product Security as a Management Priority
+:page-date: 2024-06-03
+:page-categories: Secure Software Development
+:page-tags: Agile Security, SSDLC, Security Culture, Security Requirements, Threat Modeling
+:description: Since "shift-left", and also and "shift-right", have increasingly been taken over as marketing terms, I believe it's time to explore other directions as well. For instance upwards. In my opinion, one…
+
+Since "shift-left", and also and "shift-right", have increasingly been taken over as marketing terms, I believe it's time to explore other directions as well. For instance upwards. In my opinion, one area that has received far too little attention is how we can elevate the priority of security and better promote its significance to management functions as a critical business concern.
+
+This is not just about bottom-up security, but rather a combined approach of bottom-up and top-down security. I think the term "shift-up" fits here quite well, even though it doesn't seem to be widely used yet, at least not in this context and as far as I'm aware. In this post, I will describe some practices that I find particularly helpful here in the context of product security.
+
+== Motivation
+
+Many capable (product) security roles struggle to enhance product security because especially https://www.scrum.org/resources/what-is-a-product-owner[Product Owners (POs)] and https://en.wikipedia.org/wiki/Product_manager[Product Managers (PMs)] or Technical Product Manager (TPM), often don’t understand its importance for the business and therefore frequently deprioritize these efforts. This is an example of the https://en.wikipedia.org/wiki/Availability_heuristic[availability bias], where decision-makers prioritize issues based on how easily they can recall related information or past experiences. It's no secret that from a product management perspective, security is therefore often not the top priority but rather one of many non-functional requirements, and sometimes even just an impediment.
+
+When these roles aren’t very security-minded or don’t see much business value in it, and the customer or business owner isn't explicitly demanding it, it can take a lot of persuasion to get new security requirements prioritized and implemented by dev teams. This is because implementing security measures usually consume resources (or capacity) that could otherwise be used for new business features.
+
+This is one reason why a dedicated product security team can be so useful. It can take care of many security-related tasks by implementing secure defaults, guardrails, tools, harden systems, triaging vulnerabilities and provide dev teams guidance where needed, to relieve developers of these tasks so that they can focus on implementing business requirements instead. However, even with such a team, your development and system teams will still need to implement security requirements for their services and to mitigate vulnerabilities on their own. It will always be a shared responsibility, or, to put it differently: https://medium.com/devops-dudes/security-is-everybodys-job-part-1-devsecops-6279144f92f3[everyones job].
+
+Of course, product security roles cannot force product management to take security seriously; that responsibility lies with security or executive management, and this is why we need to understand this as a combined approach of bottom-up and top-down security.
+
+However, product security roles can and should try to ensure that product management understands the significance of security measures for the business. Product management plays a crucial role in this process because it needs to explain the importance of such an abstract topic to their business owner. By fostering this understanding, product security roles can help product management appropriately consider and integrate security into planning and product strategy.
+
+== Shift-Up Practices
+
+Here are some practices that I find helpful in this context which are based on my personal observations across various companies and industries.
+
+== 1. Consider the Business Context
+
+https://www.forbes.com/sites/forbestechcouncil/2022/09/01/context-is-king-converging-security-and-observability-to-protect-a-digital-first-world/[Context is king] - Understanding the business context is crucial, especially in AppSec and product security. This understanding allows you to justify necessary efforts to enhance security more effectively than merely referencing compliance or best practices.
+
+To gain this understanding, it is helpful to regularly participate in general meeting formats with your business, project and program management, even if security is not on the agenda. Know your stakeholders and listen to them. Try to understand their perspectives and become familiar with the product management process and the product strategy.
+
+== 2. Develop a Product Security Strategy
+
+Collaborate with your architects, PM & POs to develop a comprehensive security strategy & roadmap for your product(s) that aligns with your overall product strategy. This strategy should goals that are agreed upon with product management and aligned in the overall product strategy. Avoid being too generic, like "securely authenticate users". Instead, focus key areas and define actionable goals for each of it that can shape secure architecture decisions. To get some impressions, take a look https://www.psacertified.org/app/uploads/2020/11/PSA_Certified_10_security_goals.pdf[here] and https://thenewstack.io/5-software-security-goals-all-ctos-should-prioritize/[here].
+
+Including compliance goals, such as “ensuring compliance with corporate security requirements before go-live,” can be very helpful. Although this may seem obvious, it is important for the planning process as compliance requirements can impose significant impediments to the go-live.
+
+As part of this process, you should agree on the necessary epics, capabilities, and features (depending on your agile methodology) to support these goals. You should publish your security strategy and roadmap internally to ensure all teams are aware of it, keep is updated and regularily present it to your management.
+
+The process of developing a product security strategy should not only be seen as a bottom-up approach but rather align with a high-level corporate product security strategy and goals. For instance, security capabilities may also be explicitely requested by the CISO department, e.g. for a particular business application and as part of the corporate product management process. More mature (usually software) companies like Gitlab often establish a https://handbook.gitlab.com/handbook/security/product-security/[central product security team]. which is responsible for strategically advancing product security in the whole company by defining a mission, guiding principles, and providing support for products in this area.
+
+== 3. Justify Security Requirements with Business Value
+
+Whenever possible, frame and evaluate your stories and features from a business perspective to highlight their value. Continuously question your security requirements in this context. Focus not on what is possible or fancy from a security standpoint, but on what is sensible and appropriate for the specific product from a business perspective.
+
+As mentioned above, one important aspect to achieve this is to advocate for the creation of epics and https://www.scrum.org/agile-capability[capabilities] that address significant security concerns. Capabilities, in particular, may not always be utilized immediately but are crucial in scaled agile frameworks like https://scaledagileframework.com/[SAFe]. They are often employed by product management to define broader business or technical functionalities that impact multiple teams or release trains. Introducing new capabilities typically requires ageements from various roles, making it more complex than defining a new user story, especially for security capabilities. However, capabilities, along with their associated features and stories, generally receive greater visibility and priority compared to individual user stories. This enhanced visibility can significantly advance security requirements.
+
+In addition to creating general security requirements, you should also monitor new business stories and develop corresponding tasks, (enabler) stories, and features. For instance the development of a required security service, protocol, or process. Thereby, security requirements are linked to relevant business requirements, and can thereby better justified and prioritized. To accomplish this, consider implementing https://secodis.atlassian.net/wiki/spaces/TSSWEB/pages/98338/5.+Security+within+Software+Development+Process[security relevance tracking] for new user stories as a readiness criterion in the Definition of Ready (DoR) for your development teams. Then engage with the teams to discuss and address the relevant security requirements for these stories.
+
+Again, this doesn't mean that he should justify all security measures you prefer with business needs. Instead, it means understanding which measures are important and why.
+
+== 4. Involve POs & PMs in Threat Modeling Sessions
+
+Benjamin Franklin ounce said, "_Tell me and I forget, teach me and I may remember, involve me and I learn_". For should apply these wise words to our availability bias problem as wenn an try to include not only architects, but also at least POs, in threat modeling sessions to include their views and make them aware of potential threats. In addition, you should also consider including your PMs, and perhaps also your business owner, to dedicated threat modeling sessions in which you focus on discussing high-level abuse cases, and possible business impacts of threats.
+
+Such sessions should be well prepared. For example, you could prepare several scenarios for discussion. Reviewing identified data assets and discussing their impact, particularly concerning the loss of integrity and confidentiality, can be very beneficial. It's common to find that many assets with the same formal data classification (often "high" or "very high") are rated differently from a business perspective. These critical assets are frequently referred to as https://www.mitre.org/news-insights/publication/crown-jewels-analysis-industrial-control-systems[crown jewels].
+
+My personal expierence here is that these roles are often surprised by how interesting security can be when it is applied to their way of thinking. As a result of these sessions, you might agree on certain high-level security risks or identify effective (functional) countermeasures, such as new capabilities and features.
+
+== 5. Conduct Regular Security Refinements
+
+When you are lucky and have established an internal security product with a team of security engineers, you will probably have regular meetings in which you go through your security product backlog.
+
+In addition, you will most likely also create stories and tasks for your dev teams. In SAFe, these are often referred to as https://scaledagileframework.com/enablers/[enabler stories]. These stories, along with relevant features and capabilities, form the security backlog. Reviewing this backlog from time to time with relevant stakeholders, such as architects andparticular POs, has proven to be very helpful to me. In such a security refinement you can discuss the relevance and readiness of these stories before they are presented to other teams and stakeholders in the usual refinement process. This approach can significantly improve the acceptance of new security requirements and usually improves understanding of their significance as well.
+
+== 6. Promote Transparency and Ownership of Security Risks
+
+Ensure that security risks are not just hidden as vulnerabilities in technical silos but are also assessed and tracked as risks owned by relevant management roles, such as the business/asset owner, PO, and sometimes the PM.
+
+Risks don’t need neccesarily to be tracked within a formal risk management system. Many projects use https://www.invensislearning.com/blog/agile-risk-management/[ticket systems such as JIRA to track their project risks] and create a custom issue type “risk” with a respective workflow. This can used for internal security risks as well to which you link your implementation stories and formal InfoSec risks so that they are tracked by the CISO department as well.
+
+Sometimes, a single security story may not seem very important from a business perspective and thus receives a low priority. However, if it is made transparent that the issue is part of critical risk mitigation by linking it to a corresponding risk issue ticket, its value can be better understood by the product management. This can help the story gain a higher priority.
+
+Of course, a risk board needs to be tracked and periodically reviewed by relevant stakeholders (including your CISO department), and its risks need to be assigned to an owner to be effective. If such a internal risk review session doesn’t exist yet, you might consider establishing one yourself or requesting a time slot in a management sync or similar meeting format for this.
+
+== 7. Regularly Showcase Security Achievements and Threats
+
+Sprint Reviews are a great opportunity to improve your understanding of your work. You should therefore regularly showcase your security accomplishments there but focus on aspects like benefits for the business/customer, reduction of security workload for dev teams, or archived compliance to corporate security requirements. You may also present important new insights from threat modeling sessions conducted within that Sprint.
+
+I've often witnessed very technical security presentations at such events, showcasing impressive technical achievements. However, these presentations were often so technical that most business stakeholders and project managers likely understood very little. While this "blinding with science" approach may help presenters appear competent, it is a missed opportunity to make these stakeholders aware of the significance of security measures.
+
+If you want to address your developers with more technical details, consider including at least one or two slides at the beginning of your talk that briefs non-technical participants on the importance of what you have achieved in plain language and as illustrative as possible. This might sometimes be more difficult than talking about technical details, but to quote Albert Einstein: “_If you can't explain it simply, you don't understand it well enough_”.
+
+Additionally, you could periodically demonstrate the practical significance of identified vulnerabilities, threats, and hacking attempts to both technical and non-technical stakeholders (seing is believing). Include security incidents here of course, not just your own but also those that have recently affected other companies, especially in your industry. Use live hacking, or gamification techniques and illustrate abuse or misuse scenarios based on existing personas or user roles of your business unit or project. You may also invite security stakeholders from other organisational units (e.g. from the CISO department) to raise the significance and awareness for security.
+
+Such demos should be adaped to the specific audience and could integrated into various types of events. Sometimes, even a two-minute slot with the right audience can be highly effective if presented well. The main goal of these efforts is to continually raise awareness and understanding of security issues and the importance of relevant countermeasures.
+
+== 8. Advocate for Security as a Quality Attribute
+
+Although security engineers and quality engineers could hardly be more different, security is still a quality aspect of a software product. https://iso25000.com/index.php/en/iso-25000-standards/iso-25010[ISO/IEC 25010] describes it as the “degree to which a product or system defends against attack patterns by malicious actors and protects information and data so that persons or other products or systems have the degree of data access appropriate to their types and levels of authorization.”
+
+I’m mentioning this because software quality controls are often more readily accepted and integrated by the project and product management than explicit security requirements. In such cases, we can incorporate security requirements also into existing software quality controls such as quality gates, cross-cutting concerns, or Definitions of Done (DoDs), and track them by quality metrics and tools.
+
+I must admit, I'm not a big fan of viewing security as merely a quality concern. This perspective can lead to statements like "80% should be enough," which is unacceptable in a risk-based security field where a single risk can cause tremendous damage. However, tracking it additionaly as a quality metrics that influces the overall quality score usually doesn't hurt. While it can be helpful to track security as a quality aspect as well, it primarily needs to be measured and reported separately. Next, we will explore how to do this effectively.
+
+== 9. Provide Concise Security Reporting
+
+Establishing concise security reporting is key to achieving transparency and continuous awareness of the current state of product security. To achieve this, you should define and track meaningful security metrics & KPIs and present this (e.g. monthly) to your management. KPIs are essential, but it's also important to highlight any relevant security events that have occurred since the last report.
+
+Focus on just a few key areas, such as:
+
+* Notable Events
+* Hacking Attempts
+* Vulnerabilities
+* Open Security Risks
+* Go-Live Compliance
+* Security Requirements
+
+Use meaningful visualizations, such as traffic lights (e.g. “Are we on track?”) and trend graphs, to effectively communicate the data to non-technical stakeholders. Try to use no more than one slide. Ask your stakeholders what information is missing, or if they prefer a different form of presentation.
+
+Periodic product security reports should also be requested and monitored by the CISO department to ensure that it can take actions when necessary and that identified issues receive the appropriate level of importance.
+
+== 10. Cultivate a Positive Security Culture
+
+Lastly, fostering a xref:2024/01/02/security-culture-in-a-software-organization.adoc[positive security culture] within your organization is imporant as well here. It's essential not only for collaborating with your dev teams, but it is also essential for management and business functions to exemplify and be influenced by it. While you can promote security from the bottom up, it ultimately needs to be established and reinforced by management though.
+
+== Conclusion
+
+Although, attempting to implement security just through a bottom-up approach will likely fail, combining it with a strong executive commitment, actionable security policies, respective organizational units and compliance tracking can be highly effective though. This ensures that security aspects are adequately understood and prioritized by product management and business owners. It also cultivates security ownership and can generate interest in this topic among management roles and other stakeholders.
+
+In this sense, I think the term "shift-up" describes these efforts really nicely. Unlike "shift-left," we're not shifting responsibilities but rather awareness, priorities, and cultivated ownership here. Additionally, from an organizational perspective, it is also about shifting (or establishing) transparency and accountability for security throughout the organization.
+
+Please don’t get me wrong: This isn’t about over-prioritizing security over business needs, but about ensuring thta security is properly understood, aligned and prioritized alongside business requirements. Additionally, it enables an already security-minded product management team to more effectively communicate the necessity of security measures to business owners.
+
+Elevating security is not a one-time task or something that can be automated. Instead, it requires continuous effort, wich can sometimes be frustrating, especially since security often isn't the top priority for product management. Additionally, not every security role has the personality to discussing the significance of security requirements with product management or business owners. However, it's still vital for security roles to embrace their role as security advocates and educators. Even though it may sometimes feel like fighting windmills, particularly when approaching it mostly from the bottom up, or a company has no tech DNA, it still remains essential. It's a learning process, for both sides.
+
+If these efforts don't result in security priorities as it would be necesarry, you can still use these practices to advocate for additional security resources. This could potentially lead to the establishment or expansion of your (product) xref:2024/03/31/a-guide-to-organizational-appsec-functions.adoc[security team]. By doing so, you can shift much of the necessary security workload away from your development teams by integrating security measures into the platform, architecture, pipelines, and default settings. You could also consider introducing business security consultant who act as a liaison between business and product management on one side and product security roles on the other side. Additionally, you could take it a step further and establish a corporate product security unit with greater authority, visibility, and influence.

@@ -1,0 +1,55 @@
+= 10 Reasons Why We Need Application Security Testing Tools
+:page-date: 2014-02-14
+:page-categories: Security Test Automation
+:page-tags: Pentests, SAST, SSDLC
+:description: Despite the fact that there are quite a few reservations concerning the use of application security scanning technologies (e.g. false positives, false negatives, usability, and of course the price)…
+
+Despite the fact that there are quite a few reservations concerning the use of application security scanning technologies (e.g. false positives, false negatives, usability, and of course the price), there are also a couple of good reasons for using such tools:
+
+== 1. Applications Are Getting Bigger and Bigger
+
+Enterprise applications can be quite big: 100,000 lines of code (100 KLOC) are some sort of lower boundary. http://dailyinfographic.com/how-many-lines-of-code-does-it-take-infographic[Larger applications can easily have millions of lines of code]. The same goes for the number of unique sites and business functions such an application can have. On the same hand, even a code reviewer will only manage to analyze 1,000 lines of code (1 KLOC) a day.
+
+== 2. Applications Do Often Change
+
+Especially agile developed (Web) applications are periodically changed every sprint (e.g. every two weeks). But changes can also occur in the environment or integration of a productive application.
+
+For instance, many Web applications are dynamically linked with other sites. Where some changes are trivial with no security impact, others will make a security review of the whole application necessary (e.g. due to architectural changes).
+
+Manual pentesting or code review cannot solve that problem. According to WhiteHat, http://de.slideshare.net/duncant75/whitehat-security-website-security-statistics-report-may-2013[the average amount of serious vulnerabilities introduced per website was 56 in 2012] (in the years before even much higher).
+
+== 3. Tools Can Be Executed by Non-Experts
+
+Despite the well-known phrase http://www.brianmadden.com/blogs/jeroenvandekamp/archive/2010/01/25/quot-a-fool-with-a-tool-is-still-a-fool-words-of-wisdom-in-it-quot.aspx["a fool with a tool is still a fool"], the requirement for performing a security assessment with a tool is much lower than without. Especially where more and more application-based threats are emerging, a pentester or code reviewer has to know a lot more than a few years ago. It still needs some training to perform a decent tool-based assessment though.
+
+== 4. Tools Can Be Executed Continuously
+
+A tool-based assessment is not comparable with a manual one (e.g. a pentest or code review) in respect of the level of assurance it can reach. This is very well stated by the https://www.owasp.org/index.php/Category:OWASP_Application_Security_Verification_Standard_Project[OWASP ASVS Standard] and other publications. Although the reached assurance is lower it can be ensured due to periodic (even daily) scans.
+
+== 5. Tools Can Make Manual Analysis Much More Efficient
+
+Manual assessments (code reviews or pentests) based on tool-based scans can be much more efficient. Especially large codebases can be analyzed pretty well using such an approach.
+
+Many Low Hanging Fruits, http://www.tufin.com/blog/posts/2013/september/cyber-crime-prevention-tackle-the-low-hanging-fruit-before-spending-millions/[which] are often the point of attack for criminals, can be identified very efficiently with a tool scan before a manual assessment has even started. Also, tools will often give us indicators for possible vulnerabilities or weaknesses that can then be analyzed manually.
+
+== 6. Tools Can Check Specific Policies and Other Requirements
+
+Many tools allow the definition of very specific policies and can therefore be used to ensure that an application is compliant with a secure coding guideline.
+
+== 7. Tools Allow Us Standardized, Objective and Repeatable Analysis
+
+As long as the ruleset does not change, a tool scan will always execute the same comprehensible tests cases on all applications. No test is left out of my mistake or other reason.
+
+== 8. Tools Provide Us Metrics
+
+Tools can provide us metrics - such as the security to quality defect ratio or the http://en.wikipedia.org/wiki/Cyclomatic_complexity[cyclomatic complexity] that we can use to measure security and observe trending. In addition, results of scanning tools such as HP Fortify can be displayed in the quality dashboard such as sonar, leading to a much more visible (in)security.
+
+== 9. Tools are the foundation of sustainable and continuous improved security
+
+Tool scans are based on policies and rules. Both can be customized and tuned. The more we work with such a tool we can improve its results.
+
+== 10. Tools Can Be Integrated in Existing Tools Suites (e.g. In Quality Assurance)
+
+We can integrate a security scanning tool in tool suites that are already in place and periodically executed by quality assurance. This integration capability is yet only at its beginning but will surely be improved in the future.
+
+*All in all, we should be aware of tool limitations in general (and tool-specific ones too), but shouldn't deny their capabilities (and benefit by using them) too.*

@@ -1,0 +1,71 @@
+= Shifting Security Left by Sharing Ownership & Responsibilities
+:page-date: 2023-01-30
+:page-categories: Secure Software Development
+:page-tags: SSDLC
+:description: Many discussions on how to shift security left in the SDLC, or about implementing DevSecOps in particular, are primarily focused on the integration of various security scanning tools in CI/CD…
+
+Many discussions on how to shift security left in the SDLC, or about implementing DevSecOps in particular, are primarily focused on the integration of various security scanning tools in CI/CD pipelines. Although the use of such tools is indeed an important aspect, it is actually not the most important one. Without proper processes, tools often just lead to a constantly growing pile of vulnerabilities that no one fixes.
+
+The main challenge that needs to be solved here is therefore an organizational one. In this post, I'd like to discuss two important concepts in this field that I find get too little attention.
+
+== Shared Security Ownership
+
+In many companies, security is still the responsibility of dedicated security teams. This approach may, in some situations, actually work. For instance, with respect to classic network security. However, it is clearly not working well in a modern and highly agile software development organization.
+
+The common mindset is therefore that *security should be the responsibility of each (dev) team*. Usually, no one disagrees with that because it is somehow common sense. Unfortunately, it's not that simple. The problem that we face in practice is that it's easy to define responsibilities formally, it's a completely different one to have someone (especially a dev team) actually follow and implement them. The reason for that is simple: Dev teams usually have a lot of other important responsibilities to fulfill and working on security requirements is often simply not that important to product owners.
+
+One concept that I find really helpful here is security ownership. We know ownership models from many areas such as service ownership or system ownership. So why not define a security ownership model as well? I like this idea not only because it's more generic, but also because it has (to me) a way more positive attitude than "responsibilities" have. Whoever owns something usually feels automatically somehow responsible and accountable for it.
+
+The idea is that the security ownership of a complex application landscape is shared across the organization. Security ownership is, to me, not an organizational role that you assign to someone, but more a general concept for engaging dev teams in terms of security decisions.
+
+For instance, let us take a very common scenario in which some business services are operated on a Kubernetes cluster which is part of the product Application Platform and managed by the respective team:
+
+* *Product “Business Services A”*: Owns security of their product, including code, configuration, and data.
+* *Product “Application Platform”*: Owns security of the cloud environment, Kubernetes cluster, docker base image, repositories, CI/CD, etc.
+* *Product “Security”*: Owns security services, tools, requirements, etc. (note that in practice, "security" can be in fact owned by multiple teams, e.g. security architecture, AppSec teams, etc. I keep it short here, for a matter of simplicity)
+
+The following diagram explains such relationships within a shared security ownership model:
+
+image::2023/01/image-1.png[image]
+
+Such ownership includes not only *responsibilities* but also *accountability* as well as *a certain degree of autonomy* a dev team has with respect to making their own security decisions regarding their product. Note that although I speak about "dev teams" here, you may also use the "product teams" instead, which includes usually a bit more. However, I don't want to overcomplicate things here, so I decided to only use one term.
+
+The aspect of security autonomy perhaps needs to be a bit further explained: security ownership is not limitless but has boundaries or *guardrails*. On the one hand, engineering decisions must be in accordance with existing security requirements and the security architecture. On the other hand, risk decisions. Such a risk, a dev team can autonomously decide on could be within a certain risk level, one that does not affect another product or system, customer data, or again, does not violate important security requirements.
+
+You may ask “What about third-party components?”. Since they belong to a third party, the security is owned by that party as well. But since the product owns the general security of its service that is using this 3^rd^ party component, its security is the responsibility (not the ownership) of the dev team as well. For instance, to update a vulnerable component.
+
+That brings us to another important term, the *risk owner*. The concept of a risk owner was first introduced with the 2013 revision of ISO 27001. Risk ownership is a vital aspect of security ownership, but also an actual role that you can assign to someone. The risk owner is responsible and accountable for managing threats and vulnerabilities. In this context, the risk owner is typically a manager role responsible for a particular product, like the respective product owner (PO), product manager (PM), or engineering manager.
+
+== Shared Security Responsibilities
+
+Now, let's turn to responsibilities again. I've already mentioned above that the modern mindset is that every dev team gets responsibilities for securing their own code & artifacts.
+
+One good example of this is threat modeling, which is often conducted or updated by security architects or consultants. This is still very helpful to start with it the first time. But wouldn't it be better to get our dev teams to think about and discuss potential threats of new user stories internally (e.g. within grooming or refinement)? To ask important questions like "What could go wrong?", "How do we ensure that,. ....?"
+
+I really like the mindset that we find described in https://www.simplethread.com/doerrs-law-on-product-teams/[Doers Law]. It distinguishes two types of dev teams: Mercenaries and missionaries. Whereas mercenaries basically do what they are told, missionaries get a mission that they are trying to achieve. In our case, that mission is building a secure product.
+
+But how do we archive this?
+
+An approach that is typically not working here is to just give dev teams full autonomy of the security for their product/artifacts. I sometimes have the impression that security managers use this approach as an excuse to not have to deal with AppSec. But this is not how it works and how to be successful. Security cannot be the responsibility of just the dev teams alone but must be shared across different organizational units and roles. This is what we call a https://aws.amazon.com/de/compliance/shared-responsibility-model/[Shared Responsibility Model].
+
+This model is widely known and applied by common cloud providers like AWS, Azure, or GCP where it is used to describe the responsibilities of the cloud provider and the cloud customer in different service models (IaaS, PaaS, or SaaS). This is a great, clear concept that is easy to understand.
+
+So why not apply this to your security organization as well? This is so important because when you move away from a central security organization to a decentralized one where many parties (e.g. dev teams, AppSec Teams, Ops, etc.) are involved, it must be somehow clarified what the exact responsibilities of each of these groups actually are, which is often just not the case.
+
+Here, the shared responsibility model helps us a lot. Since such models can get a bit confusing, I find it very helpful to look at them via specific use cases. The following example describes the responsibilities of a *vulnerability management use case* that is based on a security-as-a-service approach:
+
+image::2023/01/image.png[image]
+
+Other important responsibilities, for which we should define similar use cases, are incident management, and security engineering. In practice, I would not recommend defining this model via a diagram but using tables.
+
+Here the main responsibility of the product security team is helping dev teams fulfill their *mission to build a secure product* and meet relevant security requirements, e.g. by providing (self) services, tools (e.g. SAST), training, workshops, etc. There are many different forms of such teams that could differently engage with dev teams, e.g. an AppSec team that only focuses on AppSec or an AppSec helpdesk as a dedicated support function of a team with a larger set of responsibilities.
+
+The platform team, on the other hand, can play a vital role in enforcing security requirements. Since it is their responsibility to ensure the security of the platform it must implement security controls to identify insecurities within services, prevent insecure artifacts from being deployed on the platform, and limit the exposure vulnerabilities in production.
+
+There are different ways in which security policies for products can be enforced by a platform team. For instance, via *security gates,* that can be used to prevent the deployment of artifacts with missing security checks, certain vulnerabilities, or missing approvals. And, of course, via *guardrails* that can be used to define the space in which product/dev teams can make their own security decisions. My plan is to look at both mechanisms in one of my next posts.
+
+== Conclusions
+
+A security model, especially in modern development organizations, requires more than just technical solutions. One very helpful approach is to share security ownership and responsibilities between dev & platform teams, and security.
+
+Especially, guardrails are an important aspect here. By defining (and enforcing) them, teams can get a certain amount of security autonomy in which they can make their own security decisions. This saves resources, improves speed, and usually increases the motivation of developers toward security as well.

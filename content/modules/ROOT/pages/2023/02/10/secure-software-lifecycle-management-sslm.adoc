@@ -1,0 +1,41 @@
+= Secure Software Lifecycle Management (SSLM)
+:page-date: 2023-02-10
+:page-categories: Secure Software Development
+:page-tags: Agile Security, DevSecOps, OWASP SAMM, SSDLC
+:description: The concept of integrating security into the software development process is not new. While I cannot definitively assert that Microsoft was the pioneer of this concept, the Secure Development…
+
+The concept of integrating security into the software development process is not new. While I cannot definitively assert that Microsoft was the pioneer of this concept, the https://www.microsoft.com/en-us/securityengineering/sdl/practices[Secure Development Lifecycle (SDL)] published by Microsoft in 2002 undoubtedly laid the foundation for what is now commonly known as a Secure Software Development Lifecycle (Secure SDLC or SSDLC).
+
+image::2023/02/image-2.png[image]
+
+Even today, over 20 years later, Microsoft's SDL can still be useful for illustrating the general concept of an SSDLC. However, it may not be the optimal choice as a blueprint for implementing software security in today's practical scenarios. Without delving into extensive details here, it's worth noting that our comprehension of software development and security has naturally progressed over the past two decades.
+
+Development has become more complex, agile, and the boundaries between development, operations, and security have blurred significantly. What we require now is a more comprehensive understanding of software security that encompasses all relevant aspects, extending beyond just the development process, and encompasses aspects like training and incident response. I'd like to refer to this approach as Secure Software Lifecycle Management (SSLM).
+
+== A Secure Software Lifecycle Management
+
+After some reflection, I came up with the following holistic view of how a Secure Software Lifecycle Management could look like and which works with all kinds of development methodologies, including DevOps. It even includes one important aspect that I often came across: Companies can actually have multiple Secure SDLC processes - e.g. one for modern development and one for SAP development.
+
+image::2023/11/sslm.png[image]
+
+It’s important to understand that the underlying concept here is not about establishing a new standard or similar measures. Naturally, not everyone would (or should) be required to implement all these practices. However, this visualization can be valuable for identifying relevant practices and especially crucial areas that may have been overlooked.
+
+Addressing AppSec in governance and, particularly, central AppSec architecture are two such areas that often receive insufficient attention. Especially in a landscape dominated by DevOps, where releases are frequently brief and development teams are granted increasing autonomy, establishing a robust AppSec architecture becomes vital. This can be achieved through reference architectures, blueprints, and guardrails, providing dev teams the flexibility to make their own decisions.
+
+Since not every organization builds and operates software in the same manner, there can't be a universal standard applicable to everyone. Here are some important aspects that distinguish what parts of an SSLM you may consider implementing and how to do that:
+
+. *Engineering Mindset*: Enterprise, agency, or hybrid
+. *Development Model*: Own development, development by a provider, or development as a provider
+. *Operation Model*: Own operation, operation by a provider, operation by the customer
+. *Security Risk* and *Risk Appetite*.
+. *Scope*
+
+For example, when you are not directly operating your applications, operational security might not be your primary concern. If your software is entirely developed by an external provider, you might not have the ability to dictate the implementation of a specific SSDLC, but you can require compliance with certain standards or the selection of one that aligns with your needs.
+
+Tailoring an SSLM implementation to your organization is possible based on your unique profile. This flexibility explains why there are numerous diverse implementations in the field.
+
+== Conclusion
+
+When aiming to enhance AppSec across an entire organization, we must consider more than just the development process. Software security extends beyond the shift-left paradigm; we need to integrate security comprehensively. This is particularly crucial in the era of Dev(Sec)Ops, where the distinctions between development, operations, and security are becoming increasingly blurred.
+
+Given the unique nature of each organization, there cannot be a one-size-fits-all set of practices. The concept behind SSLM is to promote a more holistic perspective on AppSec and assist organizations in identifying gaps and controls that may be missing

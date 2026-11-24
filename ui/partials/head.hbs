@@ -1,0 +1,10 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{#unless page.home}}{{#if page.title}}{{{detag page.title}}} | {{/if}}{{/unless}}{{site.title}}</title>
+{{#if page.description}}
+<meta name="description" content="{{page.description}}">
+{{/if}}
+{{#if page.canonicalUrl}}
+<link rel="canonical" href="{{page.canonicalUrl}}">
+{{/if}}
+<link rel="stylesheet" href="{{uiRootPath}}/css/site.css">

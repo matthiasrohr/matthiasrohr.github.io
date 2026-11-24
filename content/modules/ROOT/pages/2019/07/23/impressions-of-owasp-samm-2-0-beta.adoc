@@ -1,0 +1,64 @@
+= Impressions of OWASP SAMM 2 Beta
+:page-date: 2019-07-23
+:page-categories: Secure Software Development
+:page-tags: OWASP SAMM
+:description: Over the last ten years, I have been working with different maturity models for software security, including OWASP SAMM of course. I haven't used OWASP SAMM 1.x (or OpenSAMM as it was called before…
+
+Over the last ten years, I have been working with different maturity models for software security, including OWASP SAMM of course. I haven't used https://owaspsamm.org/v1-5/downloads/[OWASP SAMM 1.x] (or OpenSAMM as it was called before it became an OWASP project) have in the last time - mostly when a customer requests such an assessment and very rarely as an instrument for planning security initiatives.
+
+One of the reasons for this was that the current model does not cover important security aspects of modern software development (e.g. DevOps or agile development). Another one that I personally find the existing model quite inconsistent in terms of selection and hierarchy of many of its requirements (e.g. the improvement from one particular maturity level to the next one). For this reason, I've preferred to work with my own maturity models I've customized for clients instead.
+
+I was therefore quite thrilled when I studied the current beta of https://owaspsamm.org/v2.0b/introduction/[OWASP SAMM 2] and found that it does address these issues. For this reason, I decided to work with it within a customer project and to write this blog post to share *my impressions*. An overview of the changes can be found http://owaspsamm.org/v2.0b/introduction/[here].
+
+== Revised Structure and Requirements
+
+The general structure of OWASP SAMM has not changed much: It still consists of business functions with three security practices each of which two security requirements (A and B) are defined. Here is how the current beta looks like:
+
+image::2019/07/image-1.png[OWASP SAMM 2.0 Beta]
+
+The probably most obvious change here is the *new business function "Implementation"* that covers aspects of modern software development, like secure build (e.g. security in continuous integration) and secure deployment (e.g. security in continuous deployment), and defect management. All were missing before and allows us now to also assess the maturity of DevSecOps.
+
+Another important change relates to security testing: First of all, OWASP SAMM 2.0 introduces a new practice called "*Requirements Driven Testing*" (aka RDT), which is http://www.requirementdriventesting.com/what-is-rdt/[a common term used in software testing], and that basically covers functional requirements testing. The practice "Security Testing" still exists but is not much more focused on non-functional scanning such as SAST. I find this separation really great and useful.
+
+The new practice "*Issue Management*" (replaces "Issue Management) is subdivided into requirements for incident detection and incident response - two crucial aspects of security operations that are now explicitly addressed of this model.
+
+The practice Environment Hardening was renamed "*Environment Management*" and is now not only concerned with hardening aspects but also addresses now patch management. Especially due to https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities[insecure 3rd party components] (e.g. insecure dependencies) this is a major concern of application security management today which has become more attention recently.
+
+Besides these changes of the SAMM structure, far more happened regarding the actual requirements. A lot of great improvements happened here. For instance in "Security Architecture", "Strategy and Metrics" (concerning with the AppSec program), or "Education and Guidance" which now officially mentioned the https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1501780261.pdf[Security Champion] role - unfortunately without greater differentiation. I don't want to go into too much detail here though.
+
+There are, however, a few vital aspects that I do miss. For instance about your internal security organization, security culture, or adaption of agile security practices within your teams.
+
+== More Consistent Requirement Hierarchy
+
+One improvement I don't want to miss to point out is the revised requirement structure which I find much more logical and clean.
+
+As mentioned, each security practice defines two security requirements (A and B) for each of the three maturity levels: 1 ("initial implementation"), 2 ( "structured realization") and 3 ("optimized operation"). The problem with previous versions of OWASP SAMM was that these requirements did often not relate much to each other, or at least not consistently.
+
+OWASP SAMM 2 now defines two *requirement topics* for each practice and three maturity levels for each of them. This makes not only a lot of sense but helps to understand and teach the model much better. Let's see how this works by taking the example of the https://owaspsamm.org/v2.0b/core/verification/v-security-testing/[Threat Assessment practice]:
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+| |*B: Threat* +
+*Modeling*
+|*Maturity 1* - Best-effort identification of high-level threats to the organization and individual projects. |Best effort ad-hoc threat modeling
+|*Maturity 2* - Standardization and enterprise-wide analysis of software-related threats within the organization. |Standardized threat modeling
+|*Maturity 3* - Pro-active improvement of threat coverage throughout the organization. |Improve quality by automated analysis
+|===
+
+As we can see, the threat modeling requirement (or "B" requirement) is now consistently improved with every maturity level starting with ad-hoc assessments and ended with some sort of automated analysis.
+
+This illustrates the structure quite well I think, although I personally would perhaps suggest other requirements, especially for maturity 3, and include aspects like the use of a threat library, threat assessment techniques, or frequency here.
+
+== Conclusion
+
+All in all, my overall impression of the current OWASP SAMM 2.0 beta is really positive: The model made a huge step forward in terms of quality and, yes, maturity. It is obvious that the authors integrated a lot of experiences from applying the previous version(s).
+
+OWASP SAMM 2.0 has become not only much more suitable for conducting meaningful assessments of the current state of security within a software development organization. With its improved and more logical structure, it is also way better suited for planing actual AppSec initiatives than the previous version.
+
+You will probably still have to integrate your own practices or change existing ones when you planning to use them for this though. Own example could be the adaption of cloud security aspects, the mentioned agile security practices, or security culture aspects. OWASP SAMM 2 is also not replacing security https://www.adobe.com/content/dam/acom/en/security/pdfs/adb_security-culture-wp.pdf[belt programs] but could be used to integrate them.
+
+Since the model is still beta you should be aware that there might be changes before it is finally released. At the moment, the assessment sheet, perhaps the most important tool, has not been updated yet. So it will be rather complicated to perform actual assessments right now. But I'm very confident that we will see this updated very soon.
+
+There seems also an initiative that is working on providing data to benchmark assessments results. Which would be really great, although I have heard from such initiatives for a while now. But let's see.
+
+It will also be interesting to see if the new tool will allow us to perform assessments of particular teams as well instead of only organization-wide.

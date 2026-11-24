@@ -1,0 +1,181 @@
+= Agile Threat Modeling
+:page-date: 2020-01-05
+:page-categories: Secure Software Development
+:page-tags: Agile Security, OWASP SAMM, SSDLC, Security Requirements, Threat Modeling
+:description: Combining threat modeling with an agile development methodology such as Scrum is a quite challenging topic: Creating a threat model usually requires an experienced security expert and some effort to…
+
+Combining threat modeling with an agile development methodology such as Scrum is a quite challenging topic: Creating a threat model usually requires an experienced security expert and some effort to do this. But how does this work, when a model can be outdated quickly when new threats are introduced by every new user story and sprint?
+
+When a team works only on applications that are non-critical, internal, or not live yet it may be acceptable that a security expert performs an initial threat assessment and then update it periodically or at some event.
+
+But especially when a team actively works on a critical application that is already live and perhaps even exposed to the Internet, it is not enough to just periodically perform an external threat assessment (e.g. once a year) since critical security weaknesses & vulnerabilities may be introduced by this way.
+
+These teams need to be enabled to identify potential threats and security concerns of their own user stories independently. *Therefore, they do not need to become security experts but to get some security mindset.*
+
+For this, we have two problems to solve: (1) Most teams will tell you that they do not have the time or expertise to do this and (2) most existing methodologies (such as https://docs.microsoft.com/en-us/previous-versions/commerce-server/ee823878(v=cs.20)?redirectedfrom=MSDN[STRIDE]) are not created with agility in mind.
+
+During the last years, I've worked with a lot of dev teams and other security experts on threat modeling techniques that are suitable for agile teams. I decided to write this blog post to share some approaches that I find helpful - most of them should be applicable to non-agile teams too.
+
+== Requirements
+
+It is helpful to first clarify the requirements for agile threat modeling to work. From my point of view, the following are the most important ones:
+
+. Must be acceptable by a team (= creates value with as little impediment as possible)
+. Must be able to be integrated into sprints and Scrum events
+. Must be applicable to backlog items (e.g. user stories)
+. Must only require limited security know-how of the dev team
+
+So basically, we primarily need to address the integration into agile development (mostly Scrum) & the acceptance of the approach by dev teams. Especially the latter aspect is one that I would not underestimate! Forcing a dev team to apply a technique that it doesn't see any benefits in will hardly work in practice.
+
+== Evil User Stories & Card Games
+
+One quite interesting technique that I'd like to start with is working with https://www.owasp.org/index.php/Agile_Software_Development:_Don%27t_Forget_EVIL_User_Stories[Evil User Stories]. They are basically attack scenarios or negative requirements and are usually not part of a Product Backlog that the team brainstorms about.
+
+Here are some examples:
+
+____
+"As a hacker, I want to manipulate object IDs in order to access sensitive data of other users."
+
+"As a hacker , I want to steal and use another user's access token in order to gain access to his/her data."
+
+"As a hacker, I want to automatically test passwords of a known user in order to get access to his/her account."
+
+"As a hacker, I want to execute SQL exploits in order to gain access to the database."
+
+"As a hacker, I want to trigger a large number of ressource-intensive requests/transactions in order to have the application extensively consuming ressources."
+____
+
+The team can now discuss and document the applicability of such a scenario and create a research story or spike to investigate it if they want (e.g. in case they found that verification of an Evil User Story needs to perform some code review). Teams could take such scenarios from a library maintained by your security team or get some selected by them.
+
+If a team works already with http://www.agilemodeling.com/artifacts/personas.htm[Personas] it may find it helpful to work with https://uxpressia.com/blog/good-personas-vs-bad-personas[Evil Personas] too. This is an interesting approach to constantly raise awareness of the capabilities and motivation of potential adversaries.
+
+Finally, https://www.securedevelopment.org/2017/10/12/games-to-help-learn-about-secure-development/[security card games] like https://www.microsoft.com/en-us/download/details.aspx?id=20303[Microsofts EOP] or https://www.owasp.org/index.php/OWASP_Cornucopia[OWASP Cornucopia] basically work based on a similar idea as Evil Stories and should not be left unmentioned here.
+
+Evil Stories and security card games are a nice, easy, and often fun way to raise awareness for common attacks and to establish a required security mindset in your dev teams. It is perhaps a good starting point for working with threats in a dev team but clearly a rather limited one that does not replace a comprehensive threat modeling approach since it is generic and does not relate to specific user stories, data flows, and so on.
+
+== Threat Modeling of User Stories
+
+Before we look at a full agile threat modeling approach, it is helpful to first understand how isolated threat modeling of user stories (and perhaps other backlog items as well) could work. I've seen this applied as the primary threat modeling approach by several teams.
+
+=== Step 1: Identify Security-Relevant User Stories
+
+The basic idea here is to analyze a particular user story for potential threats. A user story may look like the following:
+
+____
+_As a mobile app, I want to use_ an API that I can hit to verify if a user exists in the system.
+____
+
+From my personal experience, I have seen almost every team working with *Technical (User) Stories* that are basically technical specifications. Perhaps not fancied by many Scrum Masters but very helpful from a security point of view to analyze.
+
+The aspect we first need to evaluate is whether a user story may be *security-relevant (= may introduce a security threat)* or not. A security expert will usually be able to do this subconsciously. To enable developers to do this, it may be helpful to provide some sort of criteria (security indicator) like this one, at least for the start:
+
+. Architectural changes regarding interfaces (e.g. new REST endpoint)
+. Changes to processing of sensitive data (e.g. new validation logic)
+. Changes to security controls (e.g. authentication or access controls)
+. Any sort of other security concerns by the team
+
+So in the case of our example user story from above, we can clearly say that it qualifies as security-relevant based on the first criteria. This quick evaluation is really helpful because the vast majority of user stories are usually not security-relevant (the percentage depends on the component a team is building of course) and therefore do not need to be investigated further.
+
+Teams may change this indicator if they want and should integrate a respective condition into their Definition of Ready (DoR) that each backlog item needs to be evaluated against these criteria.
+
+Usually, it is really helpful to *have a security expert supporting the team* by defining an indicator and assessing the first user stories together in a couple of Backlog Refinement meetings against it. After a short while, most teams will apply these criteria subconsciously as well.
+
+=== Step 2: Teams Discuss Potential Security Impact of Relevant Stories
+
+User stories that have been identified as possible security-relevant should now be internally discussed/brainstormed by the team for potential security impact/threats and ways to circumvent security assumptions or controls, for instance during their Backlog Refinements:
+
+* How could an attacker abuse a new function; what should not go wrong from a security perspective?
+* Are there any security concerns (e.g. confidentiality of sensitive data or integrity of data that should not be changed) and how are they ensured?
+* What are the required/existing security mitigations (accessibility, etc.) and security controls (authentication, authorization, encryption, validation)?
+* Could a newly exposed API, function or user-input parameter be perhaps defined more restrictive (e.g. to limited users or not exposed to the Internet, only numbers are allowed as parameter values, a lower and upper bound could be defined)?
+* Are common https://www.owasp.org/index.php/Security_by_Design_Principles[secure design principles] violated (e.g. minimization of the attack surface, least privilege)?
+
+Teams may use checklists here to discuss technical security threats for certain components, e.g. common threats for a REST endpoint, databases, data flows, etc. https://www.microsoft.com/security/blog/2007/10/29/the-stride-per-element-chart/[STRIDE per DfD element mapping] or modeling of https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Abuse_Case_Cheat_Sheet.md[abuse cases] for particular user stories (as some recommend) may also be an option, but more for advanced teams or in collaboration with a security expert.
+
+If threats for a user story cannot sufficiently be assessed, it may be helpful to not implement a respective story in the current sprint and to first create a Research Story to assess its impact and/or to reach out to a *security expert and* *domain experts* to discuss a Story. In the case of our example, the impact could be, that an anonymous attacker may disclose sensitive user data, so we need to prevent this from happening.
+
+The last step is to define required security controls (e.g. specific authentication and access controls for the API endpoint) and (other) acceptance criteria (e.g. code review of the implementation by the https://resources.infosecinstitute.com/what-is-a-security-champion-definition-necessity-and-employee-empowerment/[security champion]) for the user story. Sometimes it is very useful to rephrase a User Story to address relevant security concerns as well (e.g. "As a user, I want all my profile data stored securely and only be accessible by me.").
+
+Again, it is usually a very good idea to have a security expert perform this evaluation the first couple of times and supports the team after that if it requires help or in case of security controls or Stories of a certain criticality. How much support a team requires depends of course on the team.
+
+In general, every team should have at least some security mindset (e.g. awareness of common attack patterns like https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project[OWASP Top Ten] and the attacker perspective). It could be taught within such sessions, basic awareness training, etc. In addition, you may provide additional threat modeling training (or coaching) to lead developers and security champions who preferably already gained some basic security mindset.
+
+This approach is quite lightweight and easy to adapt. It works, however, also isolated on User stories without the larger context of the entire application. This is what we look at next.
+
+== Full Agile Threat Modeling
+
+Let us now take the last approach and extend it with some context, which brings us to a full threat mode and perhaps sounds easier than it actually is. The most important question is here, who is creating it and how can a complex model be updated within agile development.
+
+One important lesson that I've learned was that you cannot expect developers to fully comprehend and apply complex threat modeling techniques and attack knowledge just by providing some isolated training. Being able to create a full threat model requires a lot of practice.
+
+So it is important to have again an experienced security expert (e.g. security architect, member of the security team) onboard who creates the first version of the model and supports the team with this security know-how where needed afterward. Compared to the last approach, we have to add one additional first step to add:
+
+=== Step 1: Perform Onboarding with the Team
+
+Run a whiteboard threat modeling session with a security expert. Separate training is usually not required or useful.
+
+The security expert will then analyze and document the model with a diagram in the team wiki (e.g. Confluence that allows you to embed diagrams build with https://github.com/michenriksen/drawio-threatmodeling[Draw.io]) so that the team can change later. MS Threat Modeling Tool (that I wrote a xref:2016/07/06/microsofts-new-threat-modeling-tool.adoc[previous post] about) is one I would not recommend using anymore. This usually takes some time but would be not part of a sprint anyway.
+
+Here is a simplified example of how such a diagram may look like (I usually annotate some more security aspects like security controls etc.):
+
+image::2020/01/Threat-Model-Example-1.png[Simplified Example Threat Model Diagram (Source Secodis)]
+
+The security expert will then later discuss the results together with the team and create relevant technical User Stories with them for identified security measures or required research Stories if something needs to be investigated further by the team.
+
+=== Step 2: Define Criteria
+
+Define criteria by which it needs to be investigated if the threat model requires updating (same as *step 1* described above).
+
+Since we want to be able to identify and assess these Stories later, it can be useful to additionally tag security-relevant Stories with a specific label (e.g. "security-relevant") or with a custom field (e.g. dropdown) that has the advantage that you can select both security-relevant and not-security relevant.
+
+image::2020/01/image-2.png[Example Security Rating of User Story in JIRA (Source Secodis)]
+
+If a team has a https://resources.infosecinstitute.com/what-is-a-security-champion-definition-necessity-and-employee-empowerment/[security champion] appointed (which should always be the case) his/her responsibility is to ensure that security-relevant Stories are identified and properly assessed for potential threats before they get implemented.
+
+=== Step 3: Teams Discuss Potential Security Impact of Relevant Stories
+
+Teams should internally discuss/brainstorm the potential security impact/threats of security-relevant User Stories during their Backlog Refinements. Again, the same as *step 2* from above, but with the following aspect added:
+
+* Check if the threat model (of the relevant application or application component) needs to be updated (e.g. in case of additional endpoints, types of data transmitted changes to security controls).
+
+As already mentioned above, teams should always be able to reach out to a security expert to discuss a relevant user story (e.g. by inviting him/her to the Backlog Refinement). It may be helpful to establish a periodic *Security Refinement* in which the security champion goes through the https://ieeexplore.ieee.org/document/6140708[security backlog] (as security-relevant tagged Stories of the Product Backlog) with the security expert. More complex Stories maybe than later discussed with the whole team.
+
+In case a User Story affects a threat model, it should be updated by a security expert, ideally the one that created it. Mature teams may update the model independently, at least for threats with limited criticality or that have been already evaluated in the past.
+
+This approach extends the previous one with the required context and is therefore much more comprehensive by limiting the required effort and expertise of the teams as much as possible. I would therefore always recommend aiming to apply this one if you are able to provide
+
+== Threat Intelligence & Community
+
+All successful security organizations to my knowledge have some sort of active security community (or at least a Security Jour Fixe) within their dev organization from which security champions of dev teams should be mandatory participants.
+
+This is a great place to discuss experiences and problems with threat modeling exercises and learn from other teams and also motivates teams to work more with threat modeling techniques in their teams.
+
+Organizations may set up some sort of threat intelligence that supports the creation of threat modelings (e.g. templates, questionnaires, common threats, and relative countermeasures for specific technology stacks, etc.).
+
+== Automation
+
+One important aspect of agile development is of course automation. Automating aspects of a threat modeling process do make sense to think about too. At least for larger organizations, since it can reduce the need for security experts, ensures standards and continuous improvement. So it does no wonder that automation of threat modeling is considered the highest maturity level for threat modeling in the new 2.0 release of OWASP SAMM.
+
+Tools such as https://iriusrisk.com/[IriusRisk] may allow you to define expert systems and to scale threat modeling in your organization. More mature teams may also use automation tools like https://github.com/izar/pytm[pytm]. Although using such tools be beneficial in some organizations, I always see the risk of teams get distracted by using a tool instead of focussing on the method.
+
+== Managing Risks
+
+Sometimes costs for full mitigation of a critical threat may is too high or not possible for some reason. In these cases, a threat should be discussed with the security team and business (Product Owner) to assess the potential risk of it that outlines likelihood and impact (e.g. worst-case scenarios).
+
+If its mitigation is decided against, the https://en.wikipedia.org/wiki/Residual_risk[residual risk] should be described and accepted by the business. Such decisions must be documented (e.g. in a risk register as shown below) but that this leaves the scope of this post.
+
+image::2020/01/image-3.png[Example of a Risk Register in JIRA (Source Secodis)]
+
+== Conclusion
+
+When you want to integrate threat modeling activities in dev teams, two aspects are important to consider:
+
+*(1) How much threat modeling is required? Although* not every developer needs to become a security expert, all should get some security mindset, especially when they work on critical applications. Not all teams require the same level of threat modeling / security expertise and effort though since they work on applications with different business risks. To understand the requirements and team-limitations are important factors. 
+
+*(2) How much threat modeling is possible?* Even if a team may work on a critical application it may not be able to reach a required maturity overnight. Here it is important to improve the time step-by-step to keep motivation high. An important aspect here are security experts (e.g. security architects) that support teams with onboarding, coaching and security expertise when needed.
+
+*Team acceptance is a critical factor here*. Even a team that does only periodically do some brainstorming on potential threats and security concerns of User Story is a great start to establish a security mindset and much better as if they would do nothing. Finding a good approach for a team usually requires you to work closely with them and let them adapt it to their own way of working.
+
+*There is not "the right way" to do threat modeling only effective and less effective ways* for different situations, conditions etc. 
+
+Lastly, the best way to handle threats are to prevent them from happening. You archive this with a xref:2017/01/02/pillars-agile-security-secdevops.adoc[*strong foundation*] that addresses them by secure standards and with a restrictive architecture.

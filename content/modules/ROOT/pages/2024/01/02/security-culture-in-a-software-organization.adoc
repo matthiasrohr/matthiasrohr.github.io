@@ -1,0 +1,20 @@
+= Positive Security Culture in Software Development
+:page-date: 2024-01-02
+:page-categories: Secure Software Development
+:page-tags: DevSecOps, Security Culture, Threat Modeling
+:description: The significance of a positive security culture is more crucial than ever in times of the increasing complexity of business applications and threats. But what does this practically mean? Here are…
+
+The significance of a positive security culture is more crucial than ever in times of the increasing complexity of business applications and threats. But what does this practically mean? Here are some indicators for a product-oriented development organization that I find helpful:
+
+. *Security Leadership from Management:* Most importantly, security is acknowledged and actively prioritized as a top business concern throughout all levels of management.
+. *Collective Security Responsibility:* Security is recognized as a shared concern with individuals across the organization who recognize their part.
+. *Security-Conscious Architecture Decisions*: Security considerations are actively considered in every architecture and technology decision.
+. *Security Teams as Partners:* Security teams are perceived, appreciated, and act, as partners and enablers for product teams rather than as obstructors or adversaries. Their primary focus is on pragmatic risk reduction, not engaging in security theater.
+. *Product Teams Embrace Security Ownership:* Product teams are committed to ensuring and improving the security of their product. As part of this, they informally implement security guidelines, continuously perform security scans, perform peer reviews, keep 3rd party dependencies up to date, discuss security aspects of new features, monitor for suspicious activities, promptly fix or address identified issues, and consistently strive to minimize security debt.
+. *Commitment to Product Security Readiness:* Insecure artifacts or features don’t go live until known risks are evaluated and managed.
+. *Positive Failure Culture:* A culture exists that values learning from failures, particularly those that result in incidents or vulnerabilities. This involves analyzing their root causes and openly sharing the insights with other teams and security, rather than engaging in finger-pointing or information hiding.
+. *Prudent Handling of Sensitive Data:* Individuals handle sensitive data and the means to access it with great care. They limit both the exposure of the data and their access to it whenever possible.
+. *Active Security Community:* Engineers actively engage in internal security communities, providing feedback and ideas for security measures, guidelines, tools, potential threat vectors, etc.
+. *Dedication to Continuous Improvement:* There is a shared understanding that security demands ongoing learning, improvement, and adaptation to emerging threats, as well as the necessity of a reassessment of past security decisions.
+
+*Update*: In a previous version of this post, I called the 4. indicator "Security Teams as Enablers". I decided to replace it with "partnering" since I found that it is the better-suited term here that also seems to be widely used already to describe this relationship.

@@ -1,0 +1,59 @@
+= IAST: A New Approach for Agile Security Testing
+:page-date: 2015-11-26
+:page-categories: Security Test Automation
+:page-tags: IAST
+:description: Static Application Security Testing (SAST) tools such as Fortify, Veracode, Checkmarx, or IBM App Scan Source Edition have been available on the market now for a while. All of them have their…
+
+Static Application Security Testing (SAST) tools such as Fortify, Veracode, Checkmarx, or IBM App Scan Source Edition have been available on the market now for a while. All of them have their specific pros and cons. But there are certain problems that leak all of these static scanning technologies. Here are three important ones:
+
+* *False Positives:* No matter what vendors might say, static code scans will lead to a number of false positives, especially the first scan that is performed on an application
+* *Ownership:* Who should be in charge of performing tests? Static code scanning often results in a large number of findings (not all of them false positives of course). Therefore, there need to be at least one (internal) tool expert if he/she actively performing the tests or will helping others with it.
+* *Context:* It is often hard to map a specific finding from a static code scan to application context (e.g. a specific url) where this could be exploited.
+
+These might not be problems for all companies, and in fact, SAST tools do a very good job in many organizations. Others do struggle a lot using such technologies though. Especially when such a tool expert is missing (e.g. when a security scanning tool should be operated within QA by non-security personal), implementing SAST technologies often doesn't lead to the expected (or promised) situation.
+
+== What is IAST?
+
+Therefore, a while ago, a new type of very promising technology has emerged that could these problems: IAST. IAST stands for Interactive Application Security Testing and is another product group term that has been invented by httsp://blogs.gartner.com/neil_macdonald/2012/01/30/interactive-application-security-testing/[Gartner].
+
+IAST can be easily described as dynamic code scanning tools, whereas SAST is always static code scanning tools that are performed against either source, byte, or binary code. It usually works by instrumenting (weaving) the deployed bytecode (in case of a Java application) or IL code (in case of a .NET application) during runtime and on the application server. The advantage of this: It allows you to analyze applications during runtime. All code that is executed by the application server will be analyzed and can be linked to the context (e.g. the Url as well as the relevant SQL statement).
+
+*Especially when it comes to agile security testing where continuous security testing becomes more and more important, the IAST approach offers huge advantages.*
+
+The technology itself is much older and has been widely known in the QA market for a while now. The first product in the security market was to my knowledge Fortify PTA (Program Trace Analyzer) which was available at least in 2008. It was a very exciting technology, but perhaps a bit early back then, so it was taken from the market in 2012. What changed a lot in recent years was that products become much more mature and "enterprise-ready" if you want.
+
+*And so it is that almost every SAST / IAST vendor is currently working on building or acquiring an* IAST solution or has already one in its portfolio. Since it is not clearly defined what functionality an IAST tool has to offer, the differences between those solutions can be huge. For instance, some DAST products may just be extended by an additional server-side agent that improves the results of a DAST (Dynamic Application Security Scanning) scan. A couple of vendors now offers solutions with "IAST technology". When we look a bit deeper into them, it becomes clear, that we basically must distinguish two approaches:
+
+== IAST Light (Active)
+
+The first approach is basically DAST solutions that have an additional agent installed on the application server to improve test results. The architecture more or less looks like this:
+
+image::2015/11/iast-light-architecture.png[image]
+
+Many vendors such as HP, IBM, and Accunetix extended their tools with this function. The most sophisticated implementation of this approach is to my knowledge Seeker that has been recently acquired by Synopsys (Coventry) from Quotium. Seeker is basically an enterprise scanning solution that integrates both DAST and IAST capability. It thereby actively runs continuous security tests ("attacks") such as SQL Injection against a Web application and identifies (that is different from a classic DAST solution) potential vulnerabilities with its agent that observes the application from within the application server.
+
+image::2015/11/Seeker-Screenshot1-1024x739.png[image]
+
+Seeker is very easy to use (it even casts videos of vulnerabilities it identifies) and allows to be integrated with automatic functional testing tools such as Selenium or HP QTP and offers management reporting and dashboard functionality as well as the integration into existing systems such as Sonar.
+
+== Full IAST (Passive)
+
+The only "full" IAST tool on the market is to my knowledge currently http://www.contrastsecurity.com/[Contrast IAST] from Contrast Inc. The approach of Contrast IAST is a bit different from tools like Seeker. The main difference is that Contrast does not actively perform attacks against a web application but analyzes instrumented code purely passively. This is in fact a huge advantage since it will not affect other testing activities that run at the same time and only business testing (manual or automatic) are required to trigger security tests:
+
+image::2015/11/iast-architecture.png[image]
+
+I, tTherefore, call this a full IAST approach.
+
+The integration and execution of Contrast IAST is extremely simple: It just needs to be activated on the application servers that are used for testing once. After that, you assign a license to the application you want to have tested on the Contrast management console and you are good to go. Whenever someone (or some tools) run tests against this application contrast will analyze the data flow for potential security problems and reports them on the central security console, to a central system such as Sonar, or by custom alerts directly to an assigned mail address.
+
+image::2015/11/wgbgoat-vulnerabilities-1024x502.png[image]
+
+The dashboard view looks like this: +
+
+As we can see, the reported results are pretty comprehensive and can be easily tested and linked to the vulnerable code.
+
+== Summary
+
+First of all, we see that there are major differences between different IAST tools on the market. Some are more or less just an improvement of a DAST Tool ("IAST Light"), whereas "Full IAST" tools not only just provide just an alternative to SAST testing but a solution to major problems the industry currently struggles with a lot (e.g. false positives and required security experts). Especially when it comes to testing security in an agile or even DevOps environment.
+
+However, in my opinion, there is a market for both technologies: IAST tools are (at least at the moment) more expensive regarding licensing compared to SAST tools, they require the application to be executable and access to the runtime environment, provide fewer test cases then commercial SAST tools to name just a few reasons for this.

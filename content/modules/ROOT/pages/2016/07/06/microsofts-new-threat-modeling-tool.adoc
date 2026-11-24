@@ -1,0 +1,45 @@
+= Microsofts New Threat Modeling Tool
+:page-date: 2016-07-06
+:page-categories: Secure Software Development
+:page-tags: Threat Modeling
+:description: A week ago I had the pleasure of giving a speech at OWASP AppSec EU in Rome on the new Microsoft Threat Modeling Tool 2016 that came out last November and is still available for free.
+
+A week ago I had the pleasure of giving a speech at https://2016.appsec.eu/[OWASP AppSec EU] in Rome on the new https://blogs.microsoft.com/cybertrust/2015/10/07/whats-new-with-microsoft-threat-modeling-tool-2016[Microsoft Threat Modeling Tool 2016] that came out last November and is still available for free.
+
+The Threat Modeling Tool implements one way to derive threats (potential security problems) from a system specification and this is via https://en.wikipedia.org/wiki/Data-flow_analysis[Data flow Analysis (DFD)]. As shown in the screenshot above, we can specify our system via DFD logic within the tool, when we are ready we switch to the analysis mode and see a couple of identified threats based on our DfD diagram.
+
+image::2016/07/ms-tmt-2016-768x447-1.png[image]
+
+== New Functionality
+
+The functionality described above is basically how all versions of this tool had worked for the last 10 years it exists. The 2016 version, published last November, has one new great feature that distinguishes it from all the others though: It now allows you to completely change the XML-based templates and thereby implement your own stencils, properties, and, most importantly, threat logic. That works actually really great since Microsoft also included a quite usable threat template editor into its tool.
+
+== Customizing Threat Logic
+
+image::2016/07/dfd-threat-logic-1024x475.png[image]
+
+Before we start implementing our own threat logic we must understand how DfD based threat logic is expressed. In general, rules can be formulated as followed:
+
+Basically, everything that you can put in this logic you can have checked by Threat Modeling Tool 2016, both as include and exclude statements. Especially the use of custom attributes works really great for putting all kinds of logic into that tool (e.g. "Uses PHP" for a stencil "Web Application". As you can see from the logic above, stencil always has a parent.
+
+image::2016/07/ms-tmt-2016-template-editor.png[image]
+
+This logic can be used to identify the threat of https://cwe.mitre.org/data/definitions/319.html[data sniffing].
+
+In the case of the stencil "Web Application," this is "Generic Process". All rules that match the parent automatically match child stencils such as the web application. This allows you to define your own custom stencils that will automatically derive all threat logic that matches its parent. Unfortunately, there is only one level available, so a child stencil cannot have another child that restricts the threat logic a bit.
+
+== Download
+
+The tool itself can be downloaded https://www.microsoft.com/en-us/download/details.aspx?id=49168[here]. All you need to be able to work with it is a Windows system.
+
+In addition, I've created a couple of sample models and a reduced template for web applications that you can all download https://github.com/matthiasrohr/OTMT[from my Github page].
+
+Please be aware that if you want to replace an existing template you have to change the template id within the model file (both XML). Unfortunately, the tool does not allow this within the GUI. I've described the detailed steps for this on the Github page referenced above.
+
+== Conclusion
+
+Although it still has some limitations, Microsofts new Threat Modeling Tool is a good and free tool for creating simple DfD based security diagrams and threat models. It becomes a great tool when you are using its new customization capability that allows you to create your own custom threat templates, including all kinds of stencil and threat logic that are specific to your organization. I highly recommend making this effort because the existing logic is rather limited.
+
+If you feel that some threats identified by this tool make no sense, just look at the threat logic within the template and perhaps change it if not suitable for your organization.
+
+Besides automatically identifying threats from a DFD diagram, this tool has one great additional implicit use: Talking about interactions and data flows a system has with developers and architects often results in a lot of "aha" moments and the identification of security problems that were not aware to anyone.

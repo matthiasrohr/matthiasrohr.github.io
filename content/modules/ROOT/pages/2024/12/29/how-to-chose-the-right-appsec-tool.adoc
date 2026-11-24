@@ -1,0 +1,121 @@
+= What You Should Consider Before Choosing a New AppSec Tool
+:page-date: 2024-12-29
+:page-categories: Security Test Automation
+:description: Tools play an important role in an effective AppSec strategy. However, tools alone can only ever be part of the solution. Making poor choices here can lead to adopted tools that deliver little value…
+
+Tools play an important role in an effective AppSec strategy. However, tools alone can only ever be part of the solution. Making poor choices here can lead to adopted tools that deliver little value, wasting money & resources, and causing a lot of frustration for your dev teams.
+
+In this post, I will outline some important lessons that I’ve found to be very valuable for selecting the right tool and avoiding common mistakes.
+
+== 1. Think in Capabilities, Not Tools
+
+Don’t fall for vendor claims that their product will solve all your problems. Instead, focus on identifying the capabilities you need, and then find the best approach to address them.
+
+While adopting a new tool or service might be part of the solution, success often depends on first establishing foundational aspects like clear responsibilities and effective processes such as an effective vulnerability management process. Having these in place is often key to making sure a new tool later works as intended.
+
+Make sure to clearly define the capabilities you require, such as static and runtime container security scanning, and break them down into components. For instance, in this case, these may be:
+
+* Identifying misconfigurations.
+* Scanning for both OS-level and application-level CVEs.
+* Evaluating license risks.
+* Monitoring for potential abuse.
+
+Remember that capabilities don’t always fit neatly into standard AST categories. This is why it’s essential to shift your focus away from just thinking about tools.
+
+In some cases, you may already have some of these capabilities in place or available, perhaps through your DevOps, cloud, or container platform, without even realizing it. Sometimes you may have to extend a license to activate it, but it may be still much cheaper than buying a new tool.
+
+Also, keep in mind that new tools can do more than just add new capabilities; they can replace multiple existing tools, thereby reducing both complexity and, sometimes, cost as well. Examples of such solutions usually include certain commercial platforms, particularly ASPM (Application Security Posture Management).
+
+== 2. Understand License Models
+
+Licensing models for commercial tools can vary significantly. Common licensing metrics include:
+
+* *User-based*: Based on the number of users, typically those interacting with the tool's user interface.
+* *Developer-based*: Based on the number of developers in total or that actively contribute to a scanned codebase.
+* *Application-based*: Tied to the number of applications being monitored or managed.
+* *Engine-based*: Based on scan engines used. This model is less common and often used as an additional metric.
+* *Node-based*: Runtime tools may also work on metrics like executed nodes or server instances.
+
+Application-based models can be tricky because the definition of an "application" can vary from one vendor to another, e.g. by
+
+* *Technical applications*, such as APIs, are measured by repositories or deployed artifacts.
+* *Business applications*, which might include a limited number of components such as APIs.
+* *Artifact size*, e.g. application counts for every 50 MB of artifact size.
+* *Lines of Code (LOC)*, measured based on the net lines of source code in a project, e.g. 1 app per 50k LOC without comments.
+* *URLs*, where each unique URL or endpoint is counted as one application.
+
+So you should be careful, because choosing the wrong license model may result in unexpected costs, for instance by multiple licenses being consumed for a larger application or one for each microservice.
+
+Therefore, models based on users or developers are usually the easiest to estimate and compare. Additionally, they don’t punish you for implementing modern, microservice-based software architectures or modularizing existing ones.
+
+== 3. Avoid Vendor Lock-Ins
+
+Avoid becoming dependent on a specific tool, solution, or vendor. When designing processes and building integrations, prioritize flexibility to ensure tools can be easily replaced if necessary. This approach not only minimizes risks but also strengthens your negotiating position during license renewals.
+
+Using an ASOC (Application Security Orchestration and Correlation) solution such as DefectDojo to manage AppSec findings can help here. These tools act as a frontend to integrate various AST tools like SAST or SCA and others, making it easier to replace individual tools without disrupting workflows.
+
+== 4. Consider the Total Cost of Ownership (TCO)
+
+There are many great FOSS (Free or Open Source) security tools, and some are even the best in their class. But if a tool needs to be operated and maintained, it’s important to consider its total cost too, not just its license costs.
+
+SaaS, technical support, or managed services can often be cheaper and easier than operating everything yourself, especially for larger organizations. Such offerings are sometimes available for FOSS as well.
+
+== 5. Focus on Value, Not Quantity
+
+More tools don’t necessarily mean better security. Each new tool can create extra noise, duplicate findings, or just results that have little value for your development teams. Don’t add as many tools as possible to your pipeline just because you can.
+
+Instead, choose tools that provide real value and only add more when truly needed by your organization. Often a tool that helps you reduce the pile of known vulnerabilities may have more value than one that further increases it.
+
+As I’ve already mentioned ASOC (or ASPM that have their own AST capabilities integrated) solutions can help here by providing a unified frontend for multiple scanners, consolidating duplicate findings, and enforcing SLA policies, empowering your teams to work smarter, not harder.
+
+== 6. Prioritize Developer Experience
+
+IfIf you want developers to use an AppSec tool like SAST, it’s important to value their specific opinions and preferences. Make developers key stakeholders in the tool selection process and involve them actively in the decision-making.
+
+As part of this, focus on developer needs, such as:
+
+* *Value*: Useful, relevant results with little false positives
+* *Seamless integration*: The tool must integrate into the existing development ecosystem (e.g., CI/CD pipelines, IDEs, code repositories) and ideally allow local scans and configuration.
+* *Good developer interfaces*: CLIs, APIs, JSON output, and developer-friendly workflows.
+
+Therefore, actively involving your developers in the tool selection process makes it more likely that they will adopt and use the selected tool later.
+
+== 7. Be Clear About Roll-Out And Adaption
+
+Companies often don’t begin planning their tool roll-out and adaption strategy until after they’ve already purchased a tool or committed to implementing it. However, having a clear understanding of the tool roll-out in advance is a smarter approach as the capabilities a particular tool offers here can vary significantly and are often critical to ensuring its successful adoption.
+
+While tool rollouts often require dedicated onboarding sessions with each dev team, scaling an AppSec solution in a large organization usually depends on the tool’s ability to support fully automated provisioning or enable easy adoption through a self-service approach.
+
+Also, you should think about how you will be able to ensure the use of this tool, e.g. by automation, processes, or incentives.
+
+== 8. Establish Ownership First
+
+Every tool or solution in an organization must usually have a designated owner responsible for its operation, adoption, and continuous improvement. Generally speaking, the more complex the tool, the more essential this ownership becomes.
+
+In many cases, AppSec tools are purchased by a CISO or security team, only to be abandoned later due to unclear ownership. To prevent this, clear ownership should be assigned before buying a solution, not afterward, and be participated in the selection process.
+
+== 9. Define Selection Criteria
+
+Before choosing an expensive, large tool, set clear criteria (must-have, should-have, nice-to-have) that are Before choosing an expensive, large tool, set clear criteria (must-have, should-have, nice-to-have) that are important to different stakeholders. This helps compare tools more effectively. Group criteria in categories, each with its own rating.
+
+I personally find primarily rating the following three aspects very helpful:
+
+* *Cost* of licenses, roll-out, and operation
+* *Integration* into the dev and runtime environment
+* *Value* of findings and their handling
+
+Avoid overwhelming yourself with too many non-critical criteria that could distort the comparison process. Start by creating a shortlist of tools and assess only the top candidates more thoroughly.
+
+== 10. Evaluate Tools in a POC
+
+Don’t choose a new tool, commercial or open-source, just because of recommendations or rankings. A tool that’s suitable for one organization might not be the right fit for another. That’s why every tool should be carefully evaluated before you start using it, whether it’s free or paid.
+
+Evaluate tools with your security team first, and then run a Proof of Concept (POC) of selected candidates with one or two dev teams. During the POC, check how well the tool integrates into your dev environment and workflows. Most importantly, set clear expectations for the POC before you begin: decide what success looks like and ensure everyone agrees on the goals.
+
+== Conclusion
+
+Choosing the right AppSec tool requires a careful, ideally strategic, approach. This is true for expensive commercial tools, but also for free ones, as they can still require substantial resources for integration, operation, and of course managing findings.
+
+Focus on understanding and covering the capabilities your organization needs, not just tools. Prioritize tools that add real value and that your developers like working with, in case they are expected to. Evaluate new tools carefully to ensure they meet your expectations and do not waste your resources.
+
+New tools don’t necessarily mean more tools. For instance, you may add a lot of value by replacing a bad SCA tool with one that produces much better findings. Also, solutions like ASPM can help consolidate and reduce your existing toolset. However, sometimes the best approach is to avoid adding a new tool altogether and instead focus on maximizing the value of the tools already in use, for example, by refining the underlying processes first.

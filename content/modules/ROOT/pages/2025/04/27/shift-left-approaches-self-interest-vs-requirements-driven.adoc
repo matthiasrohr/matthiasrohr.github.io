@@ -1,0 +1,106 @@
+= Is Shift Left Dead?
+:page-date: 2025-04-27
+:page-categories: Secure Software Development
+:description: Recently, the term "Shift Left" has faced much criticism in the security community, with some suggesting "it's time to stop shift left", "shift left starts to rust", or even calling it a "dirty…
+
+Recently, the term "Shift Left" has faced much criticism in the security community, with some suggesting "https://www.linkedin.com/posts/securityjourney_its-time-to-stop-shifting-left-i-believed-activity-7118352814057119744-3a9T/?trk=public_profile_like_view[it's time to stop shift left]", "https://www.resilientcyber.io/p/shift-left-is-starting-to-rust[shift left starts to rust",] or even calling it a "https://www.reversinglabs.com/blog/why-shift-left-is-now-a-dirty-word-in-some-security-circles[dirty word]". This raises an obvious question: does the term still have any right to exist, or should we instead use something else? While I agree that the heavy overuse, particularly for marketing purposes, has taken away much of its original meaning, I’m going to swim a bit against the tide and will argue here that it can still be highly valuable.
+
+One particular reason for this is the absence of a truly equivalent replacement. While concepts like "https://www.oreilly.com/library/view/software-security-building/0321356705/[Building Security In]", "https://www.cisa.gov/securebydesign[Secure by Design]", may describe the goal of early integration security within the SDLC quite well, and others like _DevSecOps_ or _Continuous Application Security_ emphasize continuous integration, they all lack the emphasis on actively _shifting_ practices from a less desirable status quo.
+
+For this reason, rather than abandoning the term because of the criticism it has received, I believe that we should focus on how we can make it more precise to bring back its practical meaning. In this post, I’ll explore two specific shift-left strategies that, in my view, show that the term Shift Left can still be relevant when applied with clarity and intent.
+
+== The Self-Interest-Driven Approach
+
+Perhaps the most common Shift Left approach I’ve encountered relies heavily on the assumption that developers or teams are inherently motivated to care about security and that this motivation alone is enough to ensure that security is properly addressed.
+
+I would define this *self-interest-driven shift-left approach* as follows:
+
+____
+Provide general services or guidelines to developers, trusting that their self-interest will drive their effective use.
+____
+
+Here are some typical examples of this approach:
+
+* Providing a central SAST solution
+* Offering threat modeling sessions
+* Establishing an internal AppSec community
+* Sharing secure coding guidelines
+
+Don't get me wrong, these are all great ideas to drive an AppSec program and could be well-received in an organization with a strong security culture, dedicated product management support, or at least strong motivation for security within product teams. However, the reality is often different and I frequently encounter frustrated AppSec teams that do not understand why only a handful of teams seem to use their SAST tool or actively participate in their security community.
+
+Of course, not every developer is as enthusiastic about security as most AppSec engineers are. But the real issue lies elsewhere: in xref:2024/06/03/shifting-up-strategies-for-elevating-security-as-a-management-priority.adoc[competing priorities]**.** While developers generally want to write secure code, they’re often primarily guided by objectives set by management or the business. Since implementing security measures can reduce the number of implemented business features or delay time to market, the decision usually favors speed and functionality over enhanced security.
+
+One reason for this is that the value of new business features is often immediately visible, while the potential costs of security vulnerabilities, though potentially significant, are much less apparent to management and customers. The same applies to improvements in an application's overall security posture, which is often much harder to quantify and communicate. This difference in perceived value is typically what drives the prioritization of business features over security improvements.
+
+== The Requirements-Driven Approach
+
+The obvious alternative to a self-interest approach is to base our Shift Left strategy on well-defined security requirements. However, instead of just handing out checkboxes for auditors or frustrating developers with vague or unrealistic requirements, which will only lead to an xref:2024/10/29/solving-the-appsec-governance-disconnect.adoc[*AppSec disconnect*], these requirements should be actionable, measurable, and provide the necessary transparency for their effective implementation. For more advanced requirements that demand greater effort, a *risk-based approach* helps ensure that prioritization is both justified and aligned with real business impact.
+
+I would therefore define this *requirement-driven shift-left approach* as follows:
+
+____
+Aim to provide *risk-based*, *actionable*, and *measurable* (or enforceable) security requirements, supported by services, platform-capabilities, and guidance, whose implementation can be continuously monitored by both product and security teams, and collaboratively improved over time.
+____
+
+In this context, measurable could mean establishing an *AppSec dashboard* that allows teams and product owners to continuously monitor the security posture of their products through specific, meaningful metrics. Such services are being increasingly adopted across many organizations, not only for tracking security, of course, but usually more as a way to assess overall product quality and health. This is an important aspect, because it’s not just about having measurable requirements — it’s also about actually measuring them in practice.
+
+We will not always be able to measure every requirement (e.g., applying secure design principles), so we should aim to make them measurable where possible and without overcomplicating things.
+
+But let us look at some practical examples. First, we define a general applicable requirement, like this one here, for encrypting data in transit:
+
+*_„Encrypt all external communications via TLS."_*
+
+In the next step, we need to clarify this requirement. For instance:
+
+* *External*: host-external or POD-external
+* *TLS*: 1.2+, strong cipher suites, valid X.509 certificates
+
+In addition, we could define certain exceptions where appropriate. More importantly, however, we should explain how compliance with this requirement can be tested. In this particular case, it's quite straightforward: For example, we could reference a specific SSL testing tool and expected results, such as achieving an "A" rating or having no failures. A requirement like this should also link to relevant guidelines, runbooks, strategies, tools, and other resources to help developers understand how to implement it effectively.
+
+Next, let's have a look at vulnerability management:
+
+*_„Remediate vulnerabilities within the defined SLA.”_*
+
+This requirement isn’t very specific yet, but just by using SLAs, it becomes much more adaptable, especially in modern software development, and compared to the quite common practice of just demanding that all vulnerabilities must be fixed before release. In the next step, we should define specific SLAs (e.g., the number of days to remediate a vulnerability) based on the severity of the vulnerability and the risk level of the application. We can further enhance the requirement by incorporating additional metrics, such as https://www.first.org/epss/[EPSS scores] or https://medium.com/appsec-untangled/how-reachability-analysis-can-help-with-open-source-vulnerabilities-mess-coana-as-an-example-54c55ba74cde[reachability scores], to help focus efforts and reduce unnecessary workload for developers.
+
+Furthermore, the requirement can be linked to a formal remediation process and supported by tooling that tracks SLA compliance, enables risk acceptance workflows, and provides visibility to both security and product teams. For instance, by using an ASOC or ASPM solution.
+
+Lastly, let's look at a more difficult example:
+
+*_„Conduct threat modeling for each business-critical application."_*
+
+This requirement is already risk-based, but to make it truly actionable, we need to provide more detail. For instance, we should define how the initial threat model should be created, potentially with support from the AppSec team, and outline when and how it should be reviewed, such as for every security-relevant change, but at least once a year. We can also link this requirement to more specific threat modeling guidelines that describe different approaches in detail. To further support teams, we could provide resources like threat libraries, templates, tools, coaching, or even an initial threat modeling service to help them get started or assist them whenever needed.
+
+Measuring this activity is a bit more challenging, though. One approach could be to define concrete expected evidence, such as:
+
+* A file named "_threatmodel.yaml_" __ committed to the respective repository, or
+* A repository variable named "_threatmodel_" that contains a URL pointing to the threat model of that particular application (e.g., stored in Confluence or Git), allowing us also to have one model covering multiple artefacts.
+
+By implementing our threat modeling requirement in this way, we could now automatically check for conformance, including whether the model is up to date, by verifying a specific artifact, for example, through an API call to GitLab or GitHub. And if we manage to link repositories to a specific team or org unit, we could also measure conformance on an organizational level.
+
+Since security requirements often add additional workload to dev teams, we should always reflect on their value and look for ways to minimize this cost. I like to think of all the factors that contribute to a "good" requirement as part of a *Security Requirement Value Chain*. This means we should always ask ourselves the following questions when defining a security requirement:
+
+. What is the actual value of this requirement in terms of risk reduction?
+. Can we implement it centrally? e.g., at the architecture, platform, or framework level to abstract it away from developers
+. Is it clear, measurable, and actionable for developers?
+. How much effort does its implementation require from dev teams?
+. If the effort is high, can we limit its scope to high-risk applications?
+. Can we (automatically) verify its implementation? If not, can we rephrase it to make it more testable?
+. Are there reasonable exceptions where this requirement shouldn't apply?
+. How can we support teams with implementation (e.g., through templates, secure defaults, services, coding samples)?
+
+So yes, it’s often a lot of work to develop truly effective security requirements, along with the right guidelines and supporting services to make them easier to implement. But I believe it’s worth the effort, because the time we invest as AppSec teams here can significantly reduce the workload for dev teams and deliver real, practical value.
+
+That said, following this approach usually requires a lot of effort, for instance, partnering with dev units during the development of requirements, continuously improving them, providing meaningful guidance, tracking progress through metrics and dashboards, and addressing non-conformance. But once established, it ensures those teams can consistently meet security requirements that are known to be achievable.
+
+The security team, on the other hand, gains transparency across product teams and groups and encourages more proactive engagement from them in defining feasible implementation strategies. And just because security requirements are testable doesn't mean that they have to be enforced right away, of course. Instead, we can start by making insecurity (or potential security improvements) only transparent. That way, development doesn’t get blocked, and requirements can be improved step by step before being enforced.
+
+And it's not just about requirements: The transparency we create around AppSec requirements through this process can lead to greater awareness, higher prioritization of security, and ultimately help shift security culture across the organization over time.
+
+=== Conclusion
+
+Shift Left can still be a valuable term to describe concrete strategies for integrating security into the SDLC. But to make it truly meaningful, we need to clearly define what it involves and how it’s applied in practice, so that it becomes a real strategy rather than just a marketing buzzword. Then it can express something that terms like _Secure by Design_ or _DevSecOps_ don’t fully cover.
+
+Whether or not you personally use the term _Shift Left_, you are probably applying at least one specific strategy within your AppSec program. Being able to understand different strategies and being able to identify and apply them within an organization can be extremely helpful. In this post, I’ve focused on two important ones, though many more certainly exist and could be worth exploring as well.
+
+The self-interest–driven approach is quite common, but not every organization has the right conditions for it to succeed, and its adoption usually lacks transparency. A requirement-driven approach, on the other hand, is based on actionable and measurable requirements. Although it requires a lot of effort, it can offer a strong alternative that can help elevate the priority of AppSec and can eventually build a foundation of a security culture.

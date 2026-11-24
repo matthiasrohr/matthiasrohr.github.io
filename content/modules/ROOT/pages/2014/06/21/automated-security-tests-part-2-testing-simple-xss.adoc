@@ -1,0 +1,115 @@
+= Automating Security Tests – Part 2: Testing for Simple XSS
+:page-date: 2014-06-21
+:page-categories: Security Test Automation
+:page-tags: XSS, java
+:description: In part 1 of this series, I described how we can automatically test if a correct security header is a simple JUnit test. In this part, I will demonstrate how we can use self-made test automation to…
+
+In https://blog2.secodis.com/2014/05/04/security-unit-tests/[part 1] of this series, I described how we can automatically test if a correct security header is a simple JUnit test. In this part, I will demonstrate how we can use self-made test automation to test even vulnerabilities such as *Cross-Site Scripting (XSS)*.
+
+XSS is doubtless one of the https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_%28XSS%29[most common vulnerabilities for a Web application]. There are a couple of reasons for that. The two perhaps most important ones are (1) an XSS can be created very easily with every change and (2) there are https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet[a lot of contexts where JavaScript can be executed and therefore injected to] (e.g. HTML elements, event handlers, CSS, and of course JavaScript itself as well). From my experience, almost any pentest finds at least one XSS. So where need better ways to identify them, automatically, before a change is deployed in production.
+
+Of course, there are a lot of tools for that. *Web security scanners* ("DAST tools") such as OWASP ZAP or Burp, etc. on the one side and code security scanners ("SAST tool") on the other side. The first category is very hard to automate (at least without false positives), code scanners scan be automated but are usually commercial products that are not always possible to be used because of that.
+
+A reason why security code scanners are mostly commercial products is that engineering them requires a lot of resources and time. Building a simple web scanner is not that complicated, however. Many XSS vulnerabilities are so-called low-hanging fruits, vulnerabilities that can be identified very easily. For instance with the JUnit (or any similar framework for other languages) and a couple of standard APIs.
+
+XSS can be very easily identified with such tests and little false positives are *(1) reflected and (2) written to HTML context (missing HTML Entity Encoding)*. Such an XSS is often identified by injecting a JavaScript popup that is displayed when the parameter is susceptible to XSS.
+
+http://site/page.jsp?param="><script>alert(1)</script>
+
+We can identify such XSS very easily by submitting some *XSS locators* as parameters and see if the HTML characters are reflected in the response and not HTML entity encoded. Here are two that we can use for that:
+
+"><script123 +
+"><XXXXXX
+
+We don’t use just "script" because we need to uniquely identify it in the response and we probably have a lot of others script code in it. The second locator will work in cases where an application perhaps filters the string "script" in a parameter. In that case, the site is still XSS exploitable, e.g. via an injected IMG HTML tag. Before we start with writing the JUnit test case we first need some extra code for the XSS test itself so that we do not have to copy and paste them for each and every test. It looks like the following:
+
+....
+private HttpClientHelper httpHelper = new HttpClientHelper();
+
+private class XSSFoundException extends Exception
+{
+   private static final long serialVersionUID = 6883786407531954730L;
+
+   private String s;
+
+   XSSFoundException(String s) { this.s = s; }
+
+   public String getMessage() { return s; }
+}
+
+public void SimpleXSSDetector(String type, URL baseurl, List params ) throws XSSFoundException, ClientProtocolException, IOException 
+{
+   CloseableHttpClient client = HttpClientBuilder.create().build();
+
+   List xsslocators = new ArrayList();
+   xsslocators.add("\"><script123");  
+   xsslocators.add("\"><XXXXXX");
+
+   for (Iterator it = xsslocators.iterator(); it.hasNext();) {
+      String xsslocator = (String) it.next();
+        
+      for (Iterator itparams = params.iterator(); itparams.hasNext();) {
+         NameValuePair pair = (NameValuePair) itparams.next();
+         String paramname = pair.getName();
+            
+         // create a temp list for iteration
+         List paramscopy = new ArrayList();
+         paramscopy.addAll(params);
+         paramscopy.remove(pair);
+         paramscopy.add(new BasicNameValuePair(paramname, xsslocator));
+
+         // Send request and get the response
+         HttpResponse response = httpHelper.sendRequest(type, baseurl, paramscopy);
+         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+         String line = "";
+         while ((line = rd.readLine()) != null) {
+            // check if we can find the locator in the response
+            if (line.lastIndexOf(xsslocator) >= 0) {
+           //got one!
+               throw new XSSFoundException("Found potential XSS. URL \""+baseurl+"\" "+type+" param \""+paramname+"\" in line: "+line);
+            }
+         } 
+      }
+   }
+}
+....
+
+The code basically simply does what I just describes: It tests all specified parameters separately with the two XSS locators. In case a locator string has been found in the response, an *XSSFoundException* exception is thrown. For handling the HTTP connection, I created a helper class xref:attachment$2014/06/HttpClientHelper.java[HttpClientHelper] that again uses the http://hc.apache.org/httpclient-3.x/[Apache HTTP Client] library.
+
+So, finally, we can start creating our first proof of concept security unit test:
+
+....
+@Test 
+public void SimpleXSSDetectorMyForm1() throws ClientProtocolException, IOException {
+
+   URL baseurl = new URL("http://site/page.jsp");
+
+   // add all parameters here
+   List params = new ArrayList();
+   params.add(new BasicNameValuePair("param", "123"));
+   params.add(new BasicNameValuePair("lang", "en"));
+        
+   try {
+      SimpleXSSDetector("POST", baseurl, params);
+   } catch (XSSFoundException e) {
+      fail(e.getMessage());
+   }
+}
+....
+
+That's it. This test can be copied for all forms and sites that we want to tests. So we will most likely end up with a couple of such test cases. Now, let's see if it's working and run the test against http://demo.testfire.net/bank/login.aspx a testing website for IBM AppScan that is deliberately insecure:
+
+....
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.secodis.example.securitytests.XSSDetectorTest
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.95 sec <<< FAILURE!
+SimpleXSSDetectorMyForm1(com.secodis.example.securitytests.XSSDetectorTest)  Time elapsed: 1.113 sec  <<< FAILURE!
+java.lang.AssertionError: Found potential XSS. URL "http://demo.testfire.net/bank/login.aspx" POST param "uid" in line:         <input type="text" id="uid" name="uid" value=""><script123" style="width: 150px;"&gt
+....
+
+As we see in the above output, our security test found a reflected XSS in the param "uid" that can be exploited via an HTTP POST request.
+
+As already stated, this is just a simple proof of concept that could easily be extended with business logic, credentials, etc. My intention here was to illustrate how easy simple security test automation can be. Not as a 100% efficient test but as something lightweight with high accuracy that could easily integrate into your testing frameworks to prevent obvious vulnerabilities (low hanging fruits) in production.

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head}}
+</head>
+<body>
+{{> header}}
+<main>
+<article>
+<h1>Page not found</h1>
+<p>This page does not exist. Start from the <a href="{{#if site.url}}{{site.url}}{{else}}/{{/if}}">front page</a>.</p>
+</article>
+</main>
+{{> footer}}
+</body>
+</html>
