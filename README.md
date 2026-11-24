@@ -12,6 +12,10 @@ make help          # alle Ziele
 
 Voraussetzungen: Node.js, npm, make und Python 3 (nur für `make serve`). `PORT=8080 make serve` ändert den Port. Der Server bindet nur an 127.0.0.1.
 
+## Veröffentlichen
+
+`.github/workflows/pages.yml` baut die Seite bei jedem Push auf `main` und veröffentlicht sie über GitHub Pages auf https://matthiasrohr.github.io. Der Build schlägt fehl, sobald Antora etwas meldet, etwa ein fehlendes Bild oder einen kaputten Link. Einmalig nötig: im Repository unter Settings > Pages als Source „GitHub Actions" wählen. Ein eigener Domainname lässt sich dort später ergänzen; `site.url` im Playbook muss dann dazu passen.
+
 ## Neuer Beitrag
 
 Datei `content/modules/ROOT/pages/JJJJ/MM/TT/slug.adoc` anlegen. Die URL ist dann `/JJJJ/MM/TT/slug/`. Startseite, Tag- und Kategorieseiten erzeugt `extensions/blog.js` beim Build aus dem Dateikopf:
