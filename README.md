@@ -5,9 +5,12 @@ Statisches Blog, erzeugt mit [Antora](https://antora.org). Die Beiträge stammen
 ## Bauen
 
 ```
-npm ci
-npm run build      # Ergebnis: build/site
+make build         # installiert Antora beim ersten Mal und erzeugt build/site
+make serve         # baut und startet die Seite lokal auf http://127.0.0.1:8000
+make help          # alle Ziele
 ```
+
+Voraussetzungen: Node.js, npm, make und Python 3 (nur für `make serve`). `PORT=8080 make serve` ändert den Port. Der Server bindet nur an 127.0.0.1.
 
 ## Neuer Beitrag
 
