@@ -2,6 +2,7 @@
 :page-date: 2017-01-02
 :page-categories: Secure Software Development, Security Test Automation
 :page-tags: Agile Security, DevSecOps, Pentests, SSDLC, Test Automation, Threat Modeling
+:page-teaser: 2017/01/agile2-1-768x512.jpg
 :description: Agile software development has gotten more and more attention in the last couple of years. Not only internet startups or media agencies but also large companies from conservative business lines like…
 
 Agile software development has gotten more and more attention in the last couple of years. Not only internet startups or media agencies but also large companies from conservative business lines like automotive, banking, insurance, and the public sector are more and more adjusting to the agile world.

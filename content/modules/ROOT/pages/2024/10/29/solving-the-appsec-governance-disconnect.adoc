@@ -2,6 +2,7 @@
 :page-date: 2024-10-29
 :page-categories: General, Secure Software Development
 :page-tags: SSDLC, Security Requirements
+:page-teaser: 2024/10/AppSec-DisconnectTitle-768x439.webp
 :description: An often-seen anti-pattern in software architecture is the Ivory Tower Architect. It describes architects who work in isolation, disconnected from dev teams or real-world technical constraints. I…
 
 An often-seen anti-pattern in software architecture is the https://agilemodeling.com/essays/enterpriseModelingAntiPatterns.htm#IvoryTowerArchitecture[Ivory Tower Architect]. It describes architects who work in isolation, disconnected from dev teams or real-world technical constraints. I like to refer to this as the *InfoSec Tower Syndrome*. While it's not exclusive to AppSec, it’s particularly prevalent here with InfoSec often unaware of it.

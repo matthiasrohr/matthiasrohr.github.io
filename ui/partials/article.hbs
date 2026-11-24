@@ -1,26 +1,43 @@
-<article>
-{{#unless page.home}}
-<header class="post-header">
-<h1>{{{page.title}}}</h1>
-{{#if page.attributes.date}}
-<p class="meta"><time datetime="{{page.attributes.date}}">{{page.attributes.date}}</time>
-{{#each (split page.attributes.categories)}}
-<a href="{{../siteRootPath}}/category/{{slug this}}/">{{this}}</a>
-{{/each}}
-</p>
+{{#if page.home}}
+<section class="hero">
+<div class="hero-text">
+<h1>{{site.title}}</h1>
+{{#if site.keys.tagline}}
+<p class="lede">{{site.keys.tagline}}</p>
 {{/if}}
-</header>
-{{/unless}}
+</div>
+</section>
 <div class="content">
 {{{page.contents}}}
 </div>
-{{#if page.attributes.tags}}
-<footer class="post-tags">
+{{else}}
+<article class="{{#if page.attributes.date}}single{{else}}archive{{/if}}">
+<header class="entry-header">
+{{#if page.attributes.date}}
+<div class="entry-meta">
+<time datetime="{{page.attributes.date}}">{{page.attributes.date}}</time>
+{{#each (split page.attributes.categories)}}
+<a href="{{@root.siteRootPath}}/category/{{slug this}}/">{{this}}</a>
+{{/each}}
+</div>
+{{/if}}
+<h1>{{{page.title}}}</h1>
+</header>
+{{#if page.attributes.teaser}}
+<img class="entry-image" src="{{@root.siteRootPath}}/_images/{{page.attributes.teaser}}" alt="">
+{{/if}}
+<div class="content">
+{{{page.contents}}}
+</div>
+{{#if page.attributes.date}}
+<footer class="entry-footer">
 <ul>
 {{#each (split page.attributes.tags)}}
-<li><a href="{{../siteRootPath}}/tag/{{slug this}}/">{{this}}</a></li>
+<li><a href="{{@root.siteRootPath}}/tag/{{slug this}}/">{{this}}</a></li>
 {{/each}}
 </ul>
+<a class="all-posts" href="{{@root.siteRootPath}}/">All posts</a>
 </footer>
 {{/if}}
 </article>
+{{/if}}

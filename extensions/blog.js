@@ -23,6 +23,7 @@ function readPost (file) {
     title,
     date: header['page-date'] || '',
     description: header.description || '',
+    teaser: header['page-teaser'] || '',
     categories: splitList(header['page-categories']),
     tags: splitList(header['page-tags']),
   }
@@ -33,23 +34,31 @@ const byDateDesc = (a, b) => b.date.localeCompare(a.date) || a.title.localeCompa
 const escapeLinkText = (text) => text.replace(/]/g, '\\]')
 
 function renderPost (post) {
-  const lines = ['[.post]', '--', '[.post-title]#xref:' + post.path + '[' + escapeLinkText(post.title) + ']#', '', '[.post-date]#' + post.date + '#']
-  if (post.description) lines.push('', post.description)
+  const lines = ['[.post]', '--', '[.post-date]', post.date, '', '[.post-title]', 'xref:' + post.path + '[' + escapeLinkText(post.title) + ']', '']
+  if (post.description) lines.push('[.post-desc]', 'pass:c[' + post.description.replace(/]/g, '\\]') + ']', '')
+  if (post.tags.length) {
+    lines.push('[.post-tags]', post.tags.map((tag) => 'xref:tag/' + slugify(tag) + '.adoc[' + escapeLinkText(tag) + ']').join(' '), '')
+  }
+  if (post.teaser) lines.push('[.post-teaser]', 'image::' + post.teaser + '[alt=""]', '')
   lines.push('--', '')
-  return lines.join('\n')
+  return lines.join('\n') + '\n'
+}
+
+// Each group of posts (a year, or a whole tag or category) is one zone block, styled in the UI.
+function renderZone (heading, posts) {
+  const label = heading ? '[discrete]\n== ' + heading + '\n\n' : ''
+  return '[.zone]\n====\n' + label + posts.map(renderPost).join('') + '====\n\n'
 }
 
 function renderPosts (posts, groupByYear) {
-  let year
-  let out = ''
+  if (!groupByYear) return renderZone(null, posts)
+  const years = new Map()
   for (const post of posts) {
-    if (groupByYear && post.date.slice(0, 4) !== year) {
-      year = post.date.slice(0, 4)
-      out += '[discrete]\n== ' + year + '\n\n'
-    }
-    out += renderPost(post)
+    const year = post.date.slice(0, 4)
+    if (!years.has(year)) years.set(year, [])
+    years.get(year).push(post)
   }
-  return out
+  return [...years.entries()].map(([year, group]) => renderZone(year, group)).join('')
 }
 
 function groupBy (posts, key) {
@@ -64,7 +73,7 @@ function groupBy (posts, key) {
 }
 
 function renderTopics (kind, groups) {
-  return groups.map(([name, posts]) => 'xref:' + kind + '/' + slugify(name) + '.adoc[' + escapeLinkText(name) + '] (' + posts.length + ')').join(' {zwsp}| ')
+  return groups.map(([name, posts]) => 'xref:' + kind + '/' + slugify(name) + '.adoc[' + escapeLinkText(name) + '] (' + posts.length + ')').join(' ')
 }
 
 module.exports.register = function () {

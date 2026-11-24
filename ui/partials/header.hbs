@@ -1,6 +1,8 @@
 <header class="site-header">
-<a class="site-title" href="{{siteRootPath}}/">{{site.title}}</a>
-{{#if site.keys.tagline}}
-<p class="tagline">{{site.keys.tagline}}</p>
-{{/if}}
+<div class="bar">
+<a class="wordmark" href="{{siteRootPath}}/">
+<svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-boundary" x="3" y="3" width="26" height="26" rx="4"/><circle class="mark-dot" cx="16" cy="16" r="4.5"/></svg>
+<span>{{site.title}}</span>
+</a>
+</div>
 </header>

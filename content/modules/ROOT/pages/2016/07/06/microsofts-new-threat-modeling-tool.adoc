@@ -2,6 +2,7 @@
 :page-date: 2016-07-06
 :page-categories: Secure Software Development
 :page-tags: Threat Modeling
+:page-teaser: 2016/07/MS-threat-modeling-768x400.png
 :description: A week ago I had the pleasure of giving a speech at OWASP AppSec EU in Rome on the new Microsoft Threat Modeling Tool 2016 that came out last November and is still available for free.
 
 A week ago I had the pleasure of giving a speech at https://2016.appsec.eu/[OWASP AppSec EU] in Rome on the new https://blogs.microsoft.com/cybertrust/2015/10/07/whats-new-with-microsoft-threat-modeling-tool-2016[Microsoft Threat Modeling Tool 2016] that came out last November and is still available for free.

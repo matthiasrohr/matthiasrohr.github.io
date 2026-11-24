@@ -2,6 +2,7 @@
 :page-date: 2024-03-31
 :page-categories: Secure Software Development
 :page-tags: SSDLC, Security Champions, Security Organization
+:page-teaser: 2024/03/AppSec-frame3-768x439.webp
 :description: With OWASP SAMM, BSIMM, and NIST SSDF, there have been excellent resources for some time that provide a basis for evaluating and improving application security within an organization. However, these…
 
 With https://owaspsamm.org/[OWASP SAMM], https://www.synopsys.com/software-integrity/software-security-services/bsimm-maturity-model.html[BSIMM], and https://csrc.nist.gov/projects/ssdf[NIST SSDF], there have been excellent resources for some time that provide a basis for evaluating and improving application security within an organization. However, these sources often treat structural aspects, such as roles within an organization and their interdependencies, rather generally. For this reason, I want to share my personal view on that that is based on organizational structures that I've observed in many organizations, both in a good and in a bad way.

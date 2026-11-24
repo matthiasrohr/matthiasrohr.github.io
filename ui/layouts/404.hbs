@@ -3,13 +3,15 @@
 <head>
 {{> head}}
 </head>
-<body>
+<body class="archive">
 {{> header}}
 <main>
-<article>
+<header class="entry-header">
 <h1>Page not found</h1>
-<p>This page does not exist. Start from the <a href="{{#if site.url}}{{site.url}}{{else}}/{{/if}}">front page</a>.</p>
-</article>
+</header>
+<div class="content">
+<p>This address does not exist. Go back to <a href="{{#if site.url}}{{site.url}}{{else}}/{{/if}}">all posts</a>.</p>
+</div>
 </main>
 {{> footer}}
 </body>

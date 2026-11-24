@@ -22,7 +22,10 @@ Datei `content/modules/ROOT/pages/JJJJ/MM/TT/slug.adoc` anlegen. Die URL ist dan
 :page-categories: Secure Software Development
 :page-tags: SAST, DevSecOps
 :description: Ein bis zwei Sätze für Startseite und Suchmaschinen.
+:page-teaser: 2026/01/teaser.jpg
 ```
+
+`page-teaser` ist das Bild für die Übersichtsseiten (Pfad relativ zu `images/`, 16:10 wirkt am besten). Es ist optional.
 
 Bilder liegen unter `content/modules/ROOT/images/JJJJ/MM/` und werden mit `image::JJJJ/MM/datei.png[Alt-Text]` eingebunden.
 

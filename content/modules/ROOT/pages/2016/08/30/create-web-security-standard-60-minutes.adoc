@@ -1,6 +1,7 @@
 = Create your own Web Security Standard in 60 Minutes
 :page-date: 2016-08-30
 :page-categories: Secure Software Development
+:page-teaser: 2016/08/puzzle-1-768x512.jpg
 :description: Security requirements for Web applications are vital because they are specifying what a team (e.g. a development team) has actually to do and what not. Many companies are however struggling with…
 
 Security requirements for Web applications are vital because they are specifying what a team (e.g. a development team) has actually to do and what not. Many companies are however struggling with implementing such requirements for Web-based applications, at least consisting ones on an organizational level. There are many reasons for that: complexity, lack of know-how, fast-changing threat landscape...

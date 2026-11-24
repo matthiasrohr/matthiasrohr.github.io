@@ -2,6 +2,7 @@
 :page-date: 2014-02-14
 :page-categories: Security Test Automation
 :page-tags: Pentests, SAST, SSDLC
+:page-teaser: 2014/02/tools-768x513.jpg
 :description: Despite the fact that there are quite a few reservations concerning the use of application security scanning technologies (e.g. false positives, false negatives, usability, and of course the price)…
 
 Despite the fact that there are quite a few reservations concerning the use of application security scanning technologies (e.g. false positives, false negatives, usability, and of course the price), there are also a couple of good reasons for using such tools:

@@ -2,6 +2,7 @@
 :page-date: 2023-02-10
 :page-categories: Secure Software Development
 :page-tags: Agile Security, DevSecOps, OWASP SAMM, SSDLC
+:page-teaser: 2023/02/lifecycle-768x424.jpg
 :description: The concept of integrating security into the software development process is not new. While I cannot definitively assert that Microsoft was the pioneer of this concept, the Secure Development…
 
 The concept of integrating security into the software development process is not new. While I cannot definitively assert that Microsoft was the pioneer of this concept, the https://www.microsoft.com/en-us/securityengineering/sdl/practices[Secure Development Lifecycle (SDL)] published by Microsoft in 2002 undoubtedly laid the foundation for what is now commonly known as a Secure Software Development Lifecycle (Secure SDLC or SSDLC).

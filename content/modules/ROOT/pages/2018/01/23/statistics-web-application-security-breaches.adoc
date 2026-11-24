@@ -1,6 +1,7 @@
 = State of Application Security
 :page-date: 2018-01-23
 :page-categories: General
+:page-teaser: 2018/01/shout2-1-768x429.jpg
 :description: The last year had been an interesting one for information security with a number of different studies and media coverage on (web) application security. So it's worth looking a bit closer at that…
 
 The last year had been an interesting one for information security with a number of different studies and media coverage on (web) application security. So it's worth looking a bit closer at that data. I will try to put these statistics a little bit into perspective. There are some Gartner quotes related to attacks on the application layer that are quite old but have nevertheless been used even last year quite often, especially in presentations.

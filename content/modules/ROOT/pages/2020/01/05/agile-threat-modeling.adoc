@@ -2,6 +2,7 @@
 :page-date: 2020-01-05
 :page-categories: Secure Software Development
 :page-tags: Agile Security, OWASP SAMM, SSDLC, Security Requirements, Threat Modeling
+:page-teaser: 2020/01/agileworkshop-768x512.jpg
 :description: Combining threat modeling with an agile development methodology such as Scrum is a quite challenging topic: Creating a threat model usually requires an experienced security expert and some effort to…
 
 Combining threat modeling with an agile development methodology such as Scrum is a quite challenging topic: Creating a threat model usually requires an experienced security expert and some effort to do this. But how does this work, when a model can be outdated quickly when new threats are introduced by every new user story and sprint?

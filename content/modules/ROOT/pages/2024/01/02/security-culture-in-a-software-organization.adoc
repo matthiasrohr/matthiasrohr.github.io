@@ -2,6 +2,7 @@
 :page-date: 2024-01-02
 :page-categories: Secure Software Development
 :page-tags: DevSecOps, Security Culture, Threat Modeling
+:page-teaser: 2024/01/OIG-2-Kopie-768x498.jpeg
 :description: The significance of a positive security culture is more crucial than ever in times of the increasing complexity of business applications and threats. But what does this practically mean? Here are…
 
 The significance of a positive security culture is more crucial than ever in times of the increasing complexity of business applications and threats. But what does this practically mean? Here are some indicators for a product-oriented development organization that I find helpful:

@@ -2,6 +2,7 @@
 :page-date: 2019-10-06
 :page-categories: Security Test Automation
 :page-tags: DAST, IAST, SAST, Security Testing
+:page-teaser: 2019/10/goodbad-768x509.jpg
 :description: Tools that test code for common vulnerabilities such as OWASP Top Ten fall today in three categories of AST (Application Security Testing) tools: SAST (static code scanning), DAST (dynamic app scan)…
 
 Tools that test code for common vulnerabilities such as https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project[OWASP Top Ten] fall today in three categories of AST (Application Security Testing) tools: *SAST* (static code scanning), *DAST* (dynamic app scan), and IAST (dynamic code scanning). Consequently, there are not a few but a lot of tools, especially in https://samate.nist.gov/index.php/Source_Code_Security_Analyzers.html[SAST] and https://www.owasp.org/index.php/Category:Vulnerability_Scanning_Tools[DAST] areas, both commercial as well as open-source.

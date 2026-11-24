@@ -2,6 +2,7 @@
 :page-date: 2015-11-26
 :page-categories: Security Test Automation
 :page-tags: IAST
+:page-teaser: 2015/11/newapproach-768x511.jpg
 :description: Static Application Security Testing (SAST) tools such as Fortify, Veracode, Checkmarx, or IBM App Scan Source Edition have been available on the market now for a while. All of them have their…
 
 Static Application Security Testing (SAST) tools such as Fortify, Veracode, Checkmarx, or IBM App Scan Source Edition have been available on the market now for a while. All of them have their specific pros and cons. But there are certain problems that leak all of these static scanning technologies. Here are three important ones:

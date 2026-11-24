@@ -1,6 +1,7 @@
 = Additional Object Security with UUIDs
 :page-date: 2015-10-30
 :page-categories: Secure Software Development
+:page-teaser: 2015/10/auth-768x512.jpg
 :description: One of the most critical vulnerabilities a Web application can have is an insecure direct object reference. Such vulnerability normaly exists due to an (usually database) object id that an user can…
 
 One of the most critical vulnerabilities a Web application can have is an https://www.owasp.org/index.php/Top_10_2010-A4-Insecure_Direct_Object_References[insecure direct object reference]. Such vulnerability normaly exists due to an (usually database) object id that an user can directly access and manipulate (and!) that is not authorized correctly.

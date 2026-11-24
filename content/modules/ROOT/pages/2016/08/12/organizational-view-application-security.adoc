@@ -1,6 +1,7 @@
 = An Organizational View on Application Security
 :page-date: 2016-08-12
 :page-categories: Secure Software Development, Security Test Automation
+:page-teaser: 2016/08/knot-1-768x512.jpg
 :description: When it comes to integrating application security into an (especially large) organization, we often experience a bunch of practical problems and frustration. In the end, a lot of money may have been…
 
 When it comes to integrating application security into an (especially large) organization, we often experience a bunch of practical problems and frustration. In the end, a lot of money may have been spent, but little or no improvement to the security of developed applications has been accomplished.

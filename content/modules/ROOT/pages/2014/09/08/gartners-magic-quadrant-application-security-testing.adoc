@@ -2,6 +2,7 @@
 :page-date: 2014-09-08
 :page-categories: Security Test Automation
 :page-tags: DAST, IAST, RASP, SAST
+:page-teaser: 2014/09/gartner-appsec2-768x439.jpg
 :description: One publication that usually became a lot of attention in the application security market is of course Gartner’s magic quadrant. A new one for Application Security Testing (that is confusingly…
 
 image::2014/09/magic-quadrant-gartner-application-security-testing-AST-vendors-leaders-294x300.jpg[magic-quadrant-gartner-application-security-testing-AST-vendors-leaders]

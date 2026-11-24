@@ -2,6 +2,7 @@
 :page-date: 2019-07-23
 :page-categories: Secure Software Development
 :page-tags: OWASP SAMM
+:page-teaser: 2019/07/samm3-768x328.png
 :description: Over the last ten years, I have been working with different maturity models for software security, including OWASP SAMM of course. I haven't used OWASP SAMM 1.x (or OpenSAMM as it was called before…
 
 Over the last ten years, I have been working with different maturity models for software security, including OWASP SAMM of course. I haven't used https://owaspsamm.org/v1-5/downloads/[OWASP SAMM 1.x] (or OpenSAMM as it was called before it became an OWASP project) have in the last time - mostly when a customer requests such an assessment and very rarely as an instrument for planning security initiatives.

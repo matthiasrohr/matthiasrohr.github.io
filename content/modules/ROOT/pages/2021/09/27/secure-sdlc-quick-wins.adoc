@@ -2,6 +2,7 @@
 :page-date: 2021-09-27
 :page-categories: Secure Software Development
 :page-tags: SSDLC, Security Requirements
+:page-teaser: 2021/09/quickwin1-768x432.jpg
 :description: Securing the software (development) lifecycle of a large organization will usually take a lot of time. Especially when you have to start very much at the beginning.
 
 Securing the software (development) lifecycle of a large organization will usually take a lot of time. Especially when you have to start very much at the beginning.

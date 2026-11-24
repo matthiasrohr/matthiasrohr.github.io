@@ -2,6 +2,7 @@
 :page-date: 2023-09-13
 :page-categories: Secure Software Development
 :page-tags: Agile Security, SSDLC, Security Champions, Threat Modeling
+:page-teaser: 2023/09/supersecurity-768x498.jpg
 :description: Security Champions have been a proven and popular security practice over the years. We’ve learned from initiatives at companies with an AppSec leadership reputation like Netflix, AWS, Adobe, or…
 
 Security Champions have been a proven and popular security practice over the years. We’ve learned from initiatives at companies with an AppSec leadership reputation like Netflix, AWS, Adobe, or Salesforce about the remarkable advantages of integrating this role within development teams. This approach is endorsed by industry standards and organizations like http://safecode.org/wp-content/uploads/2019/02/Security-Champions-2019-.pdf)[SafeCode], https://owaspsamm.org/model/governance/education-and-guidance/stream-b/[OWASP SAMM], and https://www.synopsys.com/software-integrity/software-security-services/bsimm-maturity-model.html[BSIMM]. Consequently, it comes as no surprise that a multitude of organizations have either initiated their own Security Champion programs or have imminent plans to do so.

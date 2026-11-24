@@ -2,6 +2,7 @@
 :page-date: 2014-06-21
 :page-categories: Security Test Automation
 :page-tags: XSS, java
+:page-teaser: 2014/06/xss-768x434.jpg
 :description: In part 1 of this series, I described how we can automatically test if a correct security header is a simple JUnit test. In this part, I will demonstrate how we can use self-made test automation to…
 
 In https://blog2.secodis.com/2014/05/04/security-unit-tests/[part 1] of this series, I described how we can automatically test if a correct security header is a simple JUnit test. In this part, I will demonstrate how we can use self-made test automation to test even vulnerabilities such as *Cross-Site Scripting (XSS)*.

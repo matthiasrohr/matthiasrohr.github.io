@@ -2,6 +2,7 @@
 :page-date: 2014-04-26
 :page-categories: Security Test Automation
 :page-tags: SAST, SSDLC
+:page-teaser: 2014/04/selfservice-768x505.jpg
 :description: A few months ago, Gary McGraw wrote an interesting article on SAST deployments in the field. In it, he basically differentiates two service models:
 
 A few months ago, Gary McGraw wrote an interesting http://searchsecurity.techtarget.com/opinion/McGraw-Software-insecurity-and-scaling-automated-code-review[article] on SAST deployments in the field. In it, he basically differentiates two service models:

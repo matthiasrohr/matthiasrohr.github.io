@@ -1,6 +1,7 @@
 = What You Should Consider Before Choosing a New AppSec Tool
 :page-date: 2024-12-29
 :page-categories: Security Test Automation
+:page-teaser: 2014/02/tools-768x513.jpg
 :description: Tools play an important role in an effective AppSec strategy. However, tools alone can only ever be part of the solution. Making poor choices here can lead to adopted tools that deliver little value…
 
 Tools play an important role in an effective AppSec strategy. However, tools alone can only ever be part of the solution. Making poor choices here can lead to adopted tools that deliver little value, wasting money & resources, and causing a lot of frustration for your dev teams.

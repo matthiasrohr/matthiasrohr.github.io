@@ -2,6 +2,7 @@
 :page-date: 2023-01-30
 :page-categories: Secure Software Development
 :page-tags: SSDLC
+:page-teaser: 2023/01/shiftleft-768x512.jpg
 :description: Many discussions on how to shift security left in the SDLC, or about implementing DevSecOps in particular, are primarily focused on the integration of various security scanning tools in CI/CD…
 
 Many discussions on how to shift security left in the SDLC, or about implementing DevSecOps in particular, are primarily focused on the integration of various security scanning tools in CI/CD pipelines. Although the use of such tools is indeed an important aspect, it is actually not the most important one. Without proper processes, tools often just lead to a constantly growing pile of vulnerabilities that no one fixes.

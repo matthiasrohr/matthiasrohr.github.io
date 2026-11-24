@@ -1,6 +1,7 @@
 = Is Shift Left Dead?
 :page-date: 2025-04-27
 :page-categories: Secure Software Development
+:page-teaser: 2025/04/shiftleftdead-1-768x512.png
 :description: Recently, the term "Shift Left" has faced much criticism in the security community, with some suggesting "it's time to stop shift left", "shift left starts to rust", or even calling it a "dirty…
 
 Recently, the term "Shift Left" has faced much criticism in the security community, with some suggesting "https://www.linkedin.com/posts/securityjourney_its-time-to-stop-shifting-left-i-believed-activity-7118352814057119744-3a9T/?trk=public_profile_like_view[it's time to stop shift left]", "https://www.resilientcyber.io/p/shift-left-is-starting-to-rust[shift left starts to rust",] or even calling it a "https://www.reversinglabs.com/blog/why-shift-left-is-now-a-dirty-word-in-some-security-circles[dirty word]". This raises an obvious question: does the term still have any right to exist, or should we instead use something else? While I agree that the heavy overuse, particularly for marketing purposes, has taken away much of its original meaning, I’m going to swim a bit against the tide and will argue here that it can still be highly valuable.

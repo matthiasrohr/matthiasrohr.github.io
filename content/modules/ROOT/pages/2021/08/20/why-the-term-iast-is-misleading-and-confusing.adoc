@@ -2,6 +2,7 @@
 :page-date: 2021-08-20
 :page-categories: Security Test Automation
 :page-tags: DAST, IAST, SAST, Security Testing
+:page-teaser: 2021/08/confusion-768x439.jpg
 :description: As someone who has been working with IAST long before it was actually called this way - Fortify released its Program Trace Analyzer (PTA) approximately in the year 2008 – I have followed the…
 
 As someone who has been working with IAST long before it was actually called this way - Fortify released its Program Trace Analyzer (PTA) approximately in the year 2008 – I have followed the evolution of this technology closely and xref:2015/11/26/the-emerge-of-iast.adoc[posted a couple of times on it as well].

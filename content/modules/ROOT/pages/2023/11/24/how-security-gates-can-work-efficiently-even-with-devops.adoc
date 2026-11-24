@@ -2,6 +2,7 @@
 :page-date: 2023-11-24
 :page-categories: Secure Software Development, Security Test Automation
 :page-tags: DevSecOps
+:page-teaser: 2023/11/smartgate-768x439.webp
 :description: In modern software development, there is a strong emphasis on aspects like speed and productivity. At first glance, this may appear to contradict a mechanism like a security gate, which, by…
 
 In modern software development, there is a strong emphasis on aspects like speed and productivity. At first glance, this may appear to contradict a mechanism like a security gate, which, by definition, interrupts the process. At first glance, this may contradict in contrast to a mechanism like a security gate. That's why many seem to have strong reservations against it.

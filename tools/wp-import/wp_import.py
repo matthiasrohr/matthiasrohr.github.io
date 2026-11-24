@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """One-time import of published WordPress posts from an UpdraftPlus SQL dump into Antora pages.
 
-Usage: wp_import.py DUMP.sql CONTENT_DIR [UPLOADS_DIR]
+Usage: wp_import.py DUMP.sql CONTENT_DIR [UPLOADS_DIR ...]
   CONTENT_DIR  the Antora start_path, e.g. content
-  UPLOADS_DIR  an extracted wp-content/uploads directory; the images and files the posts reference are
-               copied to CONTENT_DIR/modules/ROOT/images and .../attachments (images only with a
-               matching image signature)
+  UPLOADS_DIR  extracted wp-content/uploads directories, searched in the given order; the images and
+               files the posts reference (including each post's featured image as teaser) are copied
+               to CONTENT_DIR/modules/ROOT/images and .../attachments (images only with a matching
+               image signature)
 
 Writes CONTENT_DIR/modules/ROOT/pages/YYYY/MM/DD/<slug>.adoc for every published post.
 Existing files with the same name are overwritten, so do not re-run after editing posts by hand.
@@ -182,12 +183,44 @@ def description_of(soup):
     return ''
 
 
-def copy_uploads(uploads_dir, target_dir, wanted, images):
-    """Copy referenced files out of an untrusted uploads tree; images must carry a matching signature."""
-    root = os.path.realpath(uploads_dir)
-    for rel in sorted(wanted):
+def find_upload(uploads_dirs, rel):
+    for uploads_dir in uploads_dirs:
+        root = os.path.realpath(uploads_dir)
         src = os.path.realpath(os.path.join(root, rel))
-        if not src.startswith(root + os.sep) or not os.path.isfile(src):
+        if src.startswith(root + os.sep) and os.path.isfile(src):
+            return src
+    return None
+
+
+def pick_teaser(meta, post_id, available):
+    """Featured image of a post: the smallest size that is at least 640 px wide, else the largest."""
+    thumb = meta.get(post_id, {}).get('_thumbnail_id')
+    attachment = meta.get(int(thumb), {}) if thumb else {}
+    original = attachment.get('_wp_attached_file')
+    if not original:
+        return None
+    info = attachment.get('_wp_attachment_metadata') or ''
+    folder = os.path.dirname(original)
+    candidates = []
+    top = re.search(r's:5:"width";i:(\d+);s:6:"height";i:\d+;s:4:"file";s:\d+:"([^"]+)"', info)
+    if top:
+        candidates.append((int(top.group(1)), original))
+    for name, width in re.findall(r's:4:"file";s:\d+:"([^"]+)";s:5:"width";i:(\d+);', info):
+        candidates.append((int(width), os.path.join(folder, name)))
+    if not candidates:
+        candidates = [(0, original)]
+    ordered = sorted(c for c in candidates if c[0] >= 640) + sorted((c for c in candidates if c[0] < 640), reverse=True)
+    for _, rel in ordered:
+        if available(rel):
+            return rel
+    return ordered[0][1]
+
+
+def copy_uploads(uploads_dirs, target_dir, wanted, images):
+    """Copy referenced files out of untrusted uploads trees; images must carry a matching signature."""
+    for rel in sorted(wanted):
+        src = find_upload(uploads_dirs, rel)
+        if not src:
             continue
         if images:
             magic = IMAGE_MAGIC.get(os.path.splitext(rel)[1].lower())
@@ -200,7 +233,7 @@ def copy_uploads(uploads_dir, target_dir, wanted, images):
         shutil.copyfile(src, dest)
 
 
-def main(dump, content_dir, uploads_dir=None):
+def main(dump, content_dir, *uploads_dirs):
     sql = open(dump, encoding='utf-8').read()
     posts = [p for p in sqldump.table(sql, 'wp_posts') if p['post_type'] == 'post' and p['post_status'] == 'publish']
     terms = {t['term_id']: t for t in sqldump.table(sql, 'wp_terms')}
@@ -215,8 +248,19 @@ def main(dump, content_dir, uploads_dir=None):
         y, m, d = p['post_date'][:10].split('-')
         return '%s/%s/%s/%s.adoc' % (y, m, d, p['post_name'])
 
+    meta = collections.defaultdict(dict)
+    for m in sqldump.table(sql, 'wp_postmeta'):
+        meta[m['post_id']][m['meta_key']] = m['meta_value']
+    module_dir = os.path.join(content_dir, 'modules', 'ROOT')
+    images_dir = os.path.join(module_dir, 'images')
+    attachments_dir = os.path.join(module_dir, 'attachments')
+
+    def available(rel):
+        return find_upload(uploads_dirs, rel) or os.path.isfile(os.path.join(images_dir, rel))
+
     imp = Importer({p['post_name']: page_path(p) for p in posts})
-    pages_dir = os.path.join(content_dir, 'modules', 'ROOT', 'pages')
+    pages_dir = os.path.join(module_dir, 'pages')
+    teasers = {}
     for p in sorted(posts, key=lambda p: p['post_date']):
         slug = p['post_name']
         soup = imp.prepare(p['post_content'], slug)
@@ -228,6 +272,10 @@ def main(dump, content_dir, uploads_dir=None):
             header.append(':page-categories: ' + ', '.join(sorted(cats)))
         if tags:
             header.append(':page-tags: ' + ', '.join(sorted(tags)))
+        teaser = pick_teaser(meta, p['ID'], available)
+        if teaser:
+            teasers[slug] = teaser
+            header.append(':page-teaser: ' + teaser)
         desc = description_of(soup)
         if desc:
             header.append(':description: ' + desc)
@@ -235,16 +283,13 @@ def main(dump, content_dir, uploads_dir=None):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, 'w', encoding='utf-8') as f:
             f.write('\n'.join(header) + '\n\n' + body)
-    wanted = {i for s in imp.images.values() for i in s}
+    wanted = {i for s in imp.images.values() for i in s} | set(teasers.values())
     attachments = {a for s in imp.attachments.values() for a in s}
-    module_dir = os.path.join(content_dir, 'modules', 'ROOT')
-    images_dir = os.path.join(module_dir, 'images')
-    attachments_dir = os.path.join(module_dir, 'attachments')
-    if uploads_dir:
-        copy_uploads(uploads_dir, images_dir, wanted, images=True)
-        copy_uploads(uploads_dir, attachments_dir, attachments, images=False)
+    if uploads_dirs:
+        copy_uploads(uploads_dirs, images_dir, wanted, images=True)
+        copy_uploads(uploads_dirs, attachments_dir, attachments, images=False)
     print('posts written:', len(posts))
-    print('images referenced:', len(wanted))
+    print('images referenced (incl. teasers):', len(wanted), '| posts with teaser:', len(teasers), 'of', len(posts))
     print('\nREFERENCED IMAGES NOT FOUND IN', images_dir)
     for rel in sorted(wanted):
         if not os.path.isfile(os.path.join(images_dir, rel)):
@@ -263,4 +308,4 @@ def main(dump, content_dir, uploads_dir=None):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:])

@@ -2,6 +2,7 @@
 :page-date: 2024-06-03
 :page-categories: Secure Software Development
 :page-tags: Agile Security, SSDLC, Security Culture, Security Requirements, Threat Modeling
+:page-teaser: 2024/05/file-7T2Qunlm6x4DKcUT5DzU7979-5-768x439.webp
 :description: Since "shift-left", and also and "shift-right", have increasingly been taken over as marketing terms, I believe it's time to explore other directions as well. For instance upwards. In my opinion, one…
 
 Since "shift-left", and also and "shift-right", have increasingly been taken over as marketing terms, I believe it's time to explore other directions as well. For instance upwards. In my opinion, one area that has received far too little attention is how we can elevate the priority of security and better promote its significance to management functions as a critical business concern.

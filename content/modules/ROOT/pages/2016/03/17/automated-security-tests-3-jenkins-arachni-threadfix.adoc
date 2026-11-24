@@ -2,6 +2,7 @@
 :page-date: 2016-03-17
 :page-categories: Security Test Automation
 :page-tags: DAST, Security Testing
+:page-teaser: 2016/03/approve_reject-1-768x720.jpg
 :description: I'm often asked how security tests can be automated with non-commercial tools, e.g. triggered by a Jenkins build. Therefore I decided to write this post, to give you a bit of understanding which…
 
 I'm often asked how security tests can be automated with non-commercial tools, e.g. triggered by a Jenkins build. Therefore I decided to write this post, to give you a bit of understanding which tools you can use and what you have to do in order to accomplish this goal.

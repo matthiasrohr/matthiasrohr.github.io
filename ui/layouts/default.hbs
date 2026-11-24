@@ -3,7 +3,10 @@
 <head>
 {{> head}}
 </head>
-<body class="{{#if page.home}}home{{else}}post-page{{/if}}">
+<body class="{{#if page.home}}home{{else}}{{#if page.attributes.date}}single{{else}}archive{{/if}}{{/if}}">
+{{#if page.attributes.date}}
+<div class="progress" aria-hidden="true"></div>
+{{/if}}
 {{> header}}
 <main>
 {{> article}}
